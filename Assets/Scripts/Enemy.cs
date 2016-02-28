@@ -7,13 +7,20 @@ namespace Assets.Scripts
     public class Enemy : MonoBehaviour
     {
         public float Speed = 10;
+        public float MaxHealth = 10;
 
         private float _lerpLength;
         private float _lerpPosition;
         private int _currentIndex;
         private Vector3[] _path;
-        private PathFollowerState _state;
+        private State _state;
         private GameManager _gameManager;
+        private float _health;
+
+        public bool Alive
+        {
+            get { return _health > 0; }
+        }
 
         public void SetPath(IEnumerable<Vector3> path)
         {
@@ -24,11 +31,22 @@ namespace Assets.Scripts
         public void ResetPath()
         {
             _path = null;
-            _state = PathFollowerState.Undefinded;
+            _state = State.Undefinded;
+        }
+
+        public void SetHit(float damage)
+        {
+            _health -= damage;
+            if (_health <= 0f)
+            {
+                _state = State.Killed;
+                _gameManager.EnemyKilled(this);
+            }
         }
 
         protected virtual void Start()
         {
+            _health = MaxHealth;
             _gameManager = GetComponentInParent<GameManager>();
             InitState();
         }
@@ -37,11 +55,11 @@ namespace Assets.Scripts
         {
             switch (_state)
             {
-                case PathFollowerState.Initialize:
+                case State.Initialize:
                     InitLerp(0);
-                    _state = PathFollowerState.Running;
+                    _state = State.Running;
                     break;
-                case PathFollowerState.Running:
+                case State.Running:
                     var effectiveSpeed = CalculateEffectiveSpeed();
                     var deltaTime = GetDeltaTime();
                     _lerpPosition += (effectiveSpeed * deltaTime) / _lerpLength;
@@ -54,7 +72,7 @@ namespace Assets.Scripts
                         }
                         else
                         {
-                            _state = PathFollowerState.Finished;
+                            _state = State.Finished;
                         }
                     }
                     break;
@@ -83,11 +101,11 @@ namespace Assets.Scripts
         {
             if (_path != null && _path.Length >= 2)
             {
-                _state = PathFollowerState.Initialize;
+                _state = State.Initialize;
             }
             else
             {
-                _state = PathFollowerState.Undefinded;
+                _state = State.Undefinded;
             }
         }
 
@@ -104,12 +122,13 @@ namespace Assets.Scripts
             transform.position = Vector3.Lerp(_path[_currentIndex], _path[_currentIndex + 1], t);
         }
 
-        private enum PathFollowerState
+        private enum State
         {
             Undefinded,
             Initialize,
             Running,
-            Finished
+            Finished,
+            Killed
         }
     }
 }

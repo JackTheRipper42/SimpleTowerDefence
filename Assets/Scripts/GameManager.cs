@@ -14,6 +14,11 @@ namespace Assets.Scripts
             DestroyEnemy(enemy);
         }
 
+        public void EnemyKilled(Enemy enemy)
+        {
+            DestroyEnemy(enemy);
+        }
+
         protected virtual void Start()
         {
             var level = GetComponentInChildren<Level>();
