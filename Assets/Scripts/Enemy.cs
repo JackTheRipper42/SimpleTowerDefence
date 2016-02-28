@@ -12,8 +12,8 @@ namespace Assets.Scripts
         private float _lerpPosition;
         private int _currentIndex;
         private Vector3[] _path;
-
         private PathFollowerState _state;
+        private GameManager _gameManager;
 
         public void SetPath(IEnumerable<Vector3> path)
         {
@@ -21,8 +21,15 @@ namespace Assets.Scripts
             InitState();
         }
 
+        public void ResetPath()
+        {
+            _path = null;
+            _state = PathFollowerState.Undefinded;
+        }
+
         protected virtual void Start()
         {
+            _gameManager = GetComponentInParent<GameManager>();
             InitState();
         }
 
@@ -37,7 +44,7 @@ namespace Assets.Scripts
                 case PathFollowerState.Running:
                     var effectiveSpeed = CalculateEffectiveSpeed();
                     var deltaTime = GetDeltaTime();
-                    _lerpPosition += (effectiveSpeed*deltaTime)/_lerpLength;
+                    _lerpPosition += (effectiveSpeed * deltaTime) / _lerpLength;
                     LerpPosition(_lerpPosition);
                     if (_lerpPosition >= 1.0f)
                     {
@@ -51,6 +58,14 @@ namespace Assets.Scripts
                         }
                     }
                     break;
+            }
+        }
+
+        protected virtual void OnTriggerEnter(Collider other)
+        {
+            if (other.transform.tag == "Exit")
+            {
+                _gameManager.EnemyExists(this);
             }
         }
 
@@ -75,7 +90,7 @@ namespace Assets.Scripts
                 _state = PathFollowerState.Undefinded;
             }
         }
-        
+
         private void InitLerp(int index)
         {
             _currentIndex = index;
