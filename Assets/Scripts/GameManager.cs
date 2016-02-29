@@ -7,6 +7,8 @@ namespace Assets.Scripts
     public class GameManager : MonoBehaviour
     {
         public GameObject EnemyPrefab;
+        public Transform Turrets;
+        public Transform Enemies;
 
         public void EnemyExists(Enemy enemy)
         {
@@ -25,14 +27,14 @@ namespace Assets.Scripts
 
             foreach (var path in paths)
             {
-                StartCoroutine(Spawner(path, level));
+                StartCoroutine(Spawner(path));
             }
         }
 
-        private void CreateEnemy(Vector3[] path, Level level)
+        private void CreateEnemy(Vector3[] path)
         {
             var obj = Instantiate(EnemyPrefab);
-            obj.transform.parent = level.Enemies.transform;
+            obj.transform.parent = Enemies.transform;
             obj.transform.position = path[0];
             var enemy = obj.GetComponent<Enemy>();
             enemy.SetPath(path);
@@ -43,7 +45,7 @@ namespace Assets.Scripts
             Destroy(enemy.gameObject);
         }
 
-        private IEnumerator Spawner(Vector3[] path, Level level)
+        private IEnumerator Spawner(Vector3[] path)
         {
             yield return new WaitForSeconds(4f);
 
@@ -51,7 +53,7 @@ namespace Assets.Scripts
             {
                 for (var j = 0; j < 5; j++)
                 {
-                    CreateEnemy(path, level);
+                    CreateEnemy(path);
                     yield return new WaitForSeconds(0.25f);
                 }
                 yield return new WaitForSeconds(1.5f);

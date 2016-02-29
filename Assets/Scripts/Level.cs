@@ -6,8 +6,6 @@ namespace Assets.Scripts
     public class Level : MonoBehaviour
     {
         public Path[] Paths;
-        public GameObject Turrets;
-        public GameObject Enemies;
 
         public IEnumerable<Vector3[]> GetPaths()
         {
