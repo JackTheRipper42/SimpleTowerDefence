@@ -73,17 +73,10 @@ namespace Assets.Scripts
                         else
                         {
                             _state = State.Finished;
+                            _gameManager.EnemyExists(this);
                         }
                     }
                     break;
-            }
-        }
-
-        protected virtual void OnTriggerEnter(Collider other)
-        {
-            if (other.transform.tag == "Exit")
-            {
-                _gameManager.EnemyExists(this);
             }
         }
 

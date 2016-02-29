@@ -8,7 +8,6 @@ namespace Assets.Scripts
         public Path[] Paths;
         public GameObject Turrets;
         public GameObject Enemies;
-        public GameObject Exits;
 
         public IEnumerable<Vector3[]> GetPaths()
         {

@@ -39,7 +39,6 @@ namespace Assets.Scripts
 
                 if (Time.time - _lastShot > 1f/FireRate)
                 {
-                    Debug.Log("Peng");
                     _target.SetHit(Damage);
                     _lastShot = Time.time;
                 }

@@ -6,7 +6,6 @@ namespace Assets.Scripts
 {
     public class GameManager : MonoBehaviour
     {
-        public GameObject ExitPrefab;
         public GameObject EnemyPrefab;
 
         public void EnemyExists(Enemy enemy)
@@ -26,10 +25,6 @@ namespace Assets.Scripts
 
             foreach (var path in paths)
             {
-                var exit = Instantiate(ExitPrefab);
-                exit.transform.position = path.Last();
-                exit.transform.parent = level.Exits.transform;
-
                 StartCoroutine(Spawner(path, level));
             }
         }
