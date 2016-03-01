@@ -8,6 +8,8 @@ namespace Assets.Scripts
         public GameObject EnemyPrefab;
         public Transform Turrets;
         public Transform Enemies;
+        public LevelInfo[] Levels;
+        public int CurrentLevel;
 
         public void EnemyExists(Enemy enemy)
         {
@@ -26,6 +28,16 @@ namespace Assets.Scripts
             obj.transform.position = path[0];
             var enemy = obj.GetComponent<Enemy>();
             enemy.SetPath(path);
+        }
+
+        protected virtual void Start()
+        {
+            var level = Levels[CurrentLevel];
+            var obj = Instantiate(level.LevelPrefab);
+            obj.transform.position = new Vector3(0f, 0f, 0f);
+            obj.transform.parent = transform;
+            obj.transform.name = level.Name;
+
         }
 
         private void DestroyEnemy(Enemy enemy)
