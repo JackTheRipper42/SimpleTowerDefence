@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class ManualPath : Path
+    public abstract class ManualPath : Path
     {
         public Transform[] Nodes;
 
-        public override Vector3[] GetPath()
+        protected override Vector3[] GetPath()
         {
             return Nodes.Select(node => node.transform.position).ToArray();
         }

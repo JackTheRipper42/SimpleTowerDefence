@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -20,18 +19,7 @@ namespace Assets.Scripts
             DestroyEnemy(enemy);
         }
 
-        protected virtual void Start()
-        {
-            var level = GetComponentInChildren<Level>();
-            var paths = level.GetPaths().ToList();
-
-            foreach (var path in paths)
-            {
-                StartCoroutine(Spawner(path));
-            }
-        }
-
-        private void CreateEnemy(Vector3[] path)
+        public void SpawnEnemy(IList<Vector3> path)
         {
             var obj = Instantiate(EnemyPrefab);
             obj.transform.parent = Enemies.transform;
@@ -43,21 +31,6 @@ namespace Assets.Scripts
         private void DestroyEnemy(Enemy enemy)
         {
             Destroy(enemy.gameObject);
-        }
-
-        private IEnumerator Spawner(Vector3[] path)
-        {
-            yield return new WaitForSeconds(4f);
-
-            for (var i = 0; i < 20; i++)
-            {
-                for (var j = 0; j < 5; j++)
-                {
-                    CreateEnemy(path);
-                    yield return new WaitForSeconds(0.25f);
-                }
-                yield return new WaitForSeconds(1.5f);
-            }
         }
     }
 }
