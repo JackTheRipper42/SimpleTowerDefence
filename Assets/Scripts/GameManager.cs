@@ -42,12 +42,16 @@ namespace Assets.Scripts
 
         protected virtual void Start()
         {
-            var level = Levels[CurrentLevel];
-            var obj = Instantiate(level.LevelPrefab);
+            var levelInfo = Levels[CurrentLevel];
+            var obj = Instantiate(levelInfo.LevelPrefab);
             obj.transform.position = new Vector3(0f, 0f, 0f);
             obj.transform.parent = transform;
-            obj.transform.name = level.Name;
-
+            obj.transform.name = levelInfo.Name;
+            var preBuildTurrets = obj.GetComponentsInChildren<Turret>();
+            foreach (var turret in preBuildTurrets)
+            {
+                turret.transform.parent = Turrets;
+            }
         }
 
         private void DestroyEnemy(Enemy enemy)
