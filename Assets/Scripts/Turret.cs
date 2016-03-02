@@ -15,7 +15,7 @@ namespace Assets.Scripts
         private List<Enemy> _availableTargets;
         private Enemy _target;
         private float _lastShot;
-
+        private GameManager _gameManager;
 
         protected virtual void Start()
         {
@@ -24,6 +24,7 @@ namespace Assets.Scripts
             _lastShot = 0;
             var sphereCollider = GetComponent<SphereCollider>();
             sphereCollider.radius = Range;
+            _gameManager = GetComponentInParent<GameManager>();
         }
 
         protected virtual void Update()
@@ -37,10 +38,11 @@ namespace Assets.Scripts
             {
                 transform.rotation = Quaternion.LookRotation(_target.transform.position - transform.position);
 
-                if (Time.time - _lastShot > 1f/FireRate)
+                var time = _gameManager.GetTime();
+                if (time - _lastShot > 1f/FireRate)
                 {
                     _target.SetHit(Damage);
-                    _lastShot = Time.time;
+                    _lastShot = time;
                 }
             }
             else

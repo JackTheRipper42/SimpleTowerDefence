@@ -12,10 +12,10 @@ namespace Assets.Scripts
         private float _lerpLength;
         private float _lerpPosition;
         private int _currentIndex;
+        private float _health;
         private Vector3[] _path;
         private State _state;
         private GameManager _gameManager;
-        private float _health;
 
         public bool Alive
         {
@@ -36,7 +36,8 @@ namespace Assets.Scripts
 
         public void SetHit(float damage)
         {
-            _health -= damage;
+            var effectiveDamage = Mathf.Max(0f, CalculateEffectiveDamage(damage));
+            _health -= effectiveDamage;
             if (_health <= 0f)
             {
                 _state = State.Killed;
@@ -61,7 +62,7 @@ namespace Assets.Scripts
                     break;
                 case State.Running:
                     var effectiveSpeed = CalculateEffectiveSpeed();
-                    var deltaTime = GetDeltaTime();
+                    var deltaTime = _gameManager.GetDeltaTime();
                     _lerpPosition += (effectiveSpeed * deltaTime) / _lerpLength;
                     LerpPosition(_lerpPosition);
                     if (_lerpPosition >= 1.0f)
@@ -80,14 +81,14 @@ namespace Assets.Scripts
             }
         }
 
-        protected virtual float GetDeltaTime()
-        {
-            return Time.deltaTime;
-        }
-
         protected virtual float CalculateEffectiveSpeed()
         {
             return Speed;
+        }
+
+        protected virtual float CalculateEffectiveDamage(float damage)
+        {
+            return damage;
         }
 
         private void InitState()

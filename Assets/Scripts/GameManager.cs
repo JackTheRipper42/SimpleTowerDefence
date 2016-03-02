@@ -30,6 +30,16 @@ namespace Assets.Scripts
             enemy.SetPath(path);
         }
 
+        public float GetTime()
+        {
+            return Time.time;
+        }
+
+        public float GetDeltaTime()
+        {
+            return Time.deltaTime;
+        }
+
         protected virtual void Start()
         {
             var level = Levels[CurrentLevel];
