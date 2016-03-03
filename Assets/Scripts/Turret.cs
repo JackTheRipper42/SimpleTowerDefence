@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -29,6 +28,8 @@ namespace Assets.Scripts
 
         protected virtual void Update()
         {
+            _availableTargets.RemoveAll(target => target == null || !target.Alive);
+
             if (_target != null && !_target.Alive)
             {
                 _target = null;
@@ -48,7 +49,7 @@ namespace Assets.Scripts
             else
             {
                 var minDistance = float.MaxValue;
-                foreach (var availableTarget in _availableTargets.Where(target => target.Alive))
+                foreach (var availableTarget in _availableTargets)
                 {
                     var distance = (availableTarget.transform.position - transform.position).sqrMagnitude;
                     if (distance < minDistance)
@@ -62,7 +63,7 @@ namespace Assets.Scripts
 
         protected virtual void OnTriggerEnter(Collider other)
         {
-            var enemy = other.GetComponent<Enemy>();
+            var enemy = other.GetComponentInParent<Enemy>();
             if (enemy != null)
             {
                 _availableTargets.Add(enemy);

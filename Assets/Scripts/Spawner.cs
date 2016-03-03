@@ -24,9 +24,9 @@ namespace Assets.Scripts
             _path = path;
         }
 
-        public void SpawnEnemy()
+        public void SpawnEnemy(EnemyId id)
         {
-            _gameManager.SpawnEnemy(_path);
+            _gameManager.SpawnEnemy(id, _path);
         }
     }
 }

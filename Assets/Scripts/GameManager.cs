@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
     public class GameManager : MonoBehaviour
     {
-        public GameObject EnemyPrefab;
-        public Transform Turrets;
-        public Transform Enemies;
+        public Transform TurretContainer;
+        public Transform EnemiyContainer;
         public LevelInfo[] Levels;
+        public EnemyInfo[] Enemies;
         public int CurrentLevel;
+
+        private Dictionary<EnemyId, GameObject> _enemies; 
 
         public void EnemyExists(Enemy enemy)
         {
@@ -21,10 +24,11 @@ namespace Assets.Scripts
             DestroyEnemy(enemy);
         }
 
-        public void SpawnEnemy(IList<Vector3> path)
+        public void SpawnEnemy(EnemyId id, IList<Vector3> path)
         {
-            var obj = Instantiate(EnemyPrefab);
-            obj.transform.parent = Enemies.transform;
+            var prefab = _enemies[id];
+            var obj = Instantiate(prefab);
+            obj.transform.parent = EnemiyContainer.transform;
             obj.transform.position = path[0];
             var enemy = obj.GetComponent<Enemy>();
             enemy.SetPath(path);
@@ -42,15 +46,17 @@ namespace Assets.Scripts
 
         protected virtual void Start()
         {
+            _enemies = Enemies.ToDictionary(enemyInfo => enemyInfo.Id, enemyInfo => enemyInfo.Prefab);
+
             var levelInfo = Levels[CurrentLevel];
-            var obj = Instantiate(levelInfo.LevelPrefab);
+            var obj = Instantiate(levelInfo.Prefab);
             obj.transform.position = new Vector3(0f, 0f, 0f);
             obj.transform.parent = transform;
             obj.transform.name = levelInfo.Name;
             var preBuildTurrets = obj.GetComponentsInChildren<Turret>();
             foreach (var turret in preBuildTurrets)
             {
-                turret.transform.parent = Turrets;
+                turret.transform.parent = TurretContainer;
             }
         }
 

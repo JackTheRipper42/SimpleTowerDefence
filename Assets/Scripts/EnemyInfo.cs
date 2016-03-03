@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     [Serializable]
-    public class LevelInfo
+    public class EnemyInfo
     {
-        public string Name;
+        public EnemyId Id;
         public GameObject Prefab;
     }
 }

@@ -13,10 +13,12 @@ namespace Assets.Scripts.Levels.TestLevel
             {
                 for (var j = 0; j < 5; j++)
                 {
-                    spawner.SpawnEnemy();
+                    spawner.SpawnEnemy(EnemyId.SmallWalker);
                     yield return new WaitForSeconds(0.25f);
                 }
-                yield return new WaitForSeconds(1.5f);
+                yield return new WaitForSeconds(1.2f);
+                spawner.SpawnEnemy(EnemyId.BigWalker);
+                yield return new WaitForSeconds(0.3f);
             }
         }
     }
