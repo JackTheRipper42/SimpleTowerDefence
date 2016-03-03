@@ -5,7 +5,7 @@ namespace Assets.Scripts
 {
     [RequireComponent(typeof(SphereCollider))]
     [RequireComponent(typeof(Rigidbody))]
-    public class Turret : MonoBehaviour
+    public class Tower : MonoBehaviour
     {
         public float Range = 5f;
         public float Damage = 0.3f;

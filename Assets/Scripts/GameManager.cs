@@ -6,7 +6,7 @@ namespace Assets.Scripts
 {
     public class GameManager : MonoBehaviour
     {
-        public Transform TurretContainer;
+        public Transform TowerContainer;
         public Transform EnemiyContainer;
         public LevelInfo[] Levels;
         public EnemyInfo[] Enemies;
@@ -53,10 +53,10 @@ namespace Assets.Scripts
             obj.transform.position = new Vector3(0f, 0f, 0f);
             obj.transform.parent = transform;
             obj.transform.name = levelInfo.Name;
-            var preBuildTurrets = obj.GetComponentsInChildren<Turret>();
-            foreach (var turret in preBuildTurrets)
+            var preBuildTowers = obj.GetComponentsInChildren<Tower>();
+            foreach (var turret in preBuildTowers)
             {
-                turret.transform.parent = TurretContainer;
+                turret.transform.parent = TowerContainer;
             }
         }
 
