@@ -10,9 +10,11 @@ namespace Assets.Scripts
         public Transform EnemiyContainer;
         public LevelInfo[] Levels;
         public EnemyInfo[] Enemies;
+        public TowerInfo[] Towers;
         public int CurrentLevel;
 
-        private Dictionary<EnemyId, GameObject> _enemies; 
+        private Dictionary<EnemyId, GameObject> _enemies;
+        private Dictionary<TowerId, GameObject> _towers; 
 
         public void EnemyExists(Enemy enemy)
         {
@@ -47,6 +49,7 @@ namespace Assets.Scripts
         protected virtual void Start()
         {
             _enemies = Enemies.ToDictionary(enemyInfo => enemyInfo.Id, enemyInfo => enemyInfo.Prefab);
+            _towers = Towers.ToDictionary(towerinfo => towerinfo.Id, towerInfo => towerInfo.Prefab);
 
             var levelInfo = Levels[CurrentLevel];
             var obj = Instantiate(levelInfo.Prefab);
