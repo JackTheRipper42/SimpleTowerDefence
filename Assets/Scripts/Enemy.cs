@@ -14,6 +14,7 @@ namespace Assets.Scripts
         private int _currentIndex;
         private float _health;
         private Vector3[] _path;
+        private Vector3 _offset;
         private State _state;
         private GameManager _gameManager;
 
@@ -22,9 +23,10 @@ namespace Assets.Scripts
             get { return _health > 0; }
         }
 
-        public void SetPath(IEnumerable<Vector3> path)
+        public void SetPath(IEnumerable<Vector3> path, Vector3 offset)
         {
             _path = path.ToArray();
+            _offset = offset;
             InitState();
         }
 
@@ -108,12 +110,12 @@ namespace Assets.Scripts
             _currentIndex = index;
             _lerpPosition = 0;
             _lerpLength = (_path[index + 1] - _path[index]).magnitude;
-            transform.position = _path[index];
+            transform.position = _path[index] + _offset;
         }
 
         private void LerpPosition(float t)
         {
-            transform.position = Vector3.Lerp(_path[_currentIndex], _path[_currentIndex + 1], t);
+            transform.position = Vector3.Lerp(_path[_currentIndex], _path[_currentIndex + 1], t) + _offset;
         }
 
         private enum State

@@ -12,6 +12,7 @@ namespace Assets.Scripts
         public EnemyInfo[] Enemies;
         public TowerInfo[] Towers;
         public int CurrentLevel;
+        [Range(0f, 2f)] public float MaxSpawnOffset = 1f;
 
         private Dictionary<EnemyId, GameObject> _enemies;
         private Dictionary<TowerId, GameObject> _towers; 
@@ -33,7 +34,9 @@ namespace Assets.Scripts
             obj.transform.parent = EnemiyContainer.transform;
             obj.transform.position = path[0];
             var enemy = obj.GetComponent<Enemy>();
-            enemy.SetPath(path);
+            var offset = Random.insideUnitSphere*MaxSpawnOffset;
+            offset.y = 0f;
+            enemy.SetPath(path, offset);
         }
 
         public float GetTime()
