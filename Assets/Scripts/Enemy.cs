@@ -6,6 +6,7 @@ namespace Assets.Scripts
 {
     public class Enemy : MonoBehaviour
     {
+        public EnemyId Id;
         public float Speed = 10;
         public float MaxHealth = 10;
 

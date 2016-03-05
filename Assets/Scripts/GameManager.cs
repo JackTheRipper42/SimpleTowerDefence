@@ -9,27 +9,33 @@ namespace Assets.Scripts
         public Transform TowerContainer;
         public Transform EnemiyContainer;
         public LevelInfo[] Levels;
-        public EnemyInfo[] Enemies;
-        public TowerInfo[] Towers;
+        public GameObject[] Enemies;
+        public GameObject[] Towers;
         public int CurrentLevel;
         [Range(0f, 2f)] public float MaxSpawnOffset = 1f;
 
-        private Dictionary<EnemyId, GameObject> _enemies;
-        private Dictionary<TowerId, GameObject> _towers; 
+        private IDictionary<EnemyId, GameObject> _enemyPrefabs;
+        private IDictionary<TowerId, GameObject> _towerPrefabs;
+        private IDictionary<EnemyId, int> _enemyCount;
+        private IDictionary<EnemyId, int> _remainingEnemyCount;
+        private IDictionary<EnemyId, int> _escaptedEnemyCount; 
 
         public void EnemyExists(Enemy enemy)
         {
+            _escaptedEnemyCount[enemy.Id] += 1;
+            _remainingEnemyCount[enemy.Id] -= 1;
             DestroyEnemy(enemy);
         }
 
         public void EnemyKilled(Enemy enemy)
         {
+            _remainingEnemyCount[enemy.Id] -= 1;
             DestroyEnemy(enemy);
         }
 
         public void SpawnEnemy(EnemyId id, IList<Vector3> path)
         {
-            var prefab = _enemies[id];
+            var prefab = _enemyPrefabs[id];
             var obj = Instantiate(prefab);
             obj.transform.parent = EnemiyContainer.transform;
             obj.transform.position = path[0];
@@ -37,6 +43,17 @@ namespace Assets.Scripts
             var offset = Random.insideUnitSphere*MaxSpawnOffset;
             offset.y = 0f;
             enemy.SetPath(path, offset);
+        }
+
+        public void SetOverallEnemyCount(IDictionary<EnemyId, int> enemyCount)
+        {
+            _enemyCount = enemyCount;
+            _remainingEnemyCount = enemyCount.ToDictionary(
+                keyValuePair => keyValuePair.Key,
+                keyValuePair => keyValuePair.Value);
+            _escaptedEnemyCount = enemyCount.ToDictionary(
+                keyValuePair => keyValuePair.Key,
+                keyValuePair => 0);
         }
 
         public float GetTime()
@@ -51,8 +68,15 @@ namespace Assets.Scripts
 
         protected virtual void Start()
         {
-            _enemies = Enemies.ToDictionary(enemyInfo => enemyInfo.Id, enemyInfo => enemyInfo.Prefab);
-            _towers = Towers.ToDictionary(towerinfo => towerinfo.Id, towerInfo => towerInfo.Prefab);
+            _enemyPrefabs = Enemies.ToDictionary(
+                enemy => enemy.GetComponent<Enemy>().Id,
+                enemy => enemy);
+            _towerPrefabs = Towers.ToDictionary(
+                tower => tower.GetComponent<Tower>().Id,
+                tower => tower);
+            _enemyCount = new Dictionary<EnemyId, int>();
+            _remainingEnemyCount = new Dictionary<EnemyId, int>();
+            _escaptedEnemyCount = new Dictionary<EnemyId, int>();
 
             var levelInfo = Levels[CurrentLevel];
             var obj = Instantiate(levelInfo.Prefab);

@@ -7,6 +7,7 @@ namespace Assets.Scripts
     [RequireComponent(typeof(Rigidbody))]
     public class Tower : MonoBehaviour
     {
+        public TowerId Id;
         public float Range = 5f;
         public float Damage = 0.3f;
         public float FireRate = 2f;
