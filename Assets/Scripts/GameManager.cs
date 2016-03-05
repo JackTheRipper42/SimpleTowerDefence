@@ -45,6 +45,14 @@ namespace Assets.Scripts
             enemy.SetPath(path, offset);
         }
 
+        public void SpawnTower(TowerId id, Vector3 position)
+        {
+            var prefab = _towerPrefabs[id];
+            var obj = Instantiate(prefab);
+            obj.transform.parent = TowerContainer.transform;
+            obj.transform.position = position;
+        }
+
         public void SetOverallEnemyCount(IDictionary<EnemyId, int> enemyCount)
         {
             _enemyCount = enemyCount;
