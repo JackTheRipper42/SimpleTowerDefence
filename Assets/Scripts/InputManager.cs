@@ -23,7 +23,11 @@ namespace Assets.Scripts
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, float.PositiveInfinity, LayerMask.value))
                 {
-                    _gameManager.SpawnTower(TowerId.Cannon, hit.point);
+                    var placeableGround = hit.transform.gameObject.GetComponent<PlaceableGround>();
+                    if (placeableGround != null)
+                    {
+                        _gameManager.SpawnTower(TowerId.Cannon, hit.point);
+                    }
                 }
             }
         }
