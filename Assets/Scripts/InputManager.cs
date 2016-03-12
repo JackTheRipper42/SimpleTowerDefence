@@ -9,10 +9,12 @@ namespace Assets.Scripts
         public string SecondaryMouseButtonAxis = "Fire2";
 
         private GameManager _gameManager;
+        private Rasterizer _rasterizer;
 
         protected virtual void Start()
         {
             _gameManager = GetComponentInParent<GameManager>();
+            _rasterizer = new Rasterizer();
         }
 
         protected virtual void Update()
@@ -26,7 +28,8 @@ namespace Assets.Scripts
                     var placeableGround = hit.transform.gameObject.GetComponent<PlaceableGround>();
                     if (placeableGround != null)
                     {
-                        _gameManager.SpawnTower(TowerId.Cannon, hit.point);
+                        var rasterizedPosition = _rasterizer.Rasterize(hit.point);
+                        _gameManager.SpawnTower(TowerId.Cannon, rasterizedPosition);
                     }
                 }
             }
