@@ -7,6 +7,7 @@ namespace Assets.Scripts
         public LayerMask LayerMask;
         public string PrimaryMouseButtonAxis = "Fire1";
         public string SecondaryMouseButtonAxis = "Fire2";
+        public TowerId BuildTowerId;
 
         private GameManager _gameManager;
         private Rasterizer _rasterizer;
@@ -29,7 +30,7 @@ namespace Assets.Scripts
                     if (placeableGround != null)
                     {
                         var rasterizedPosition = _rasterizer.Rasterize(hit.point);
-                        _gameManager.SpawnTower(TowerId.Cannon, rasterizedPosition);
+                        _gameManager.SpawnTower(BuildTowerId, rasterizedPosition);
                     }
                 }
             }

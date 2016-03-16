@@ -2,6 +2,7 @@
 {
     public enum TowerId
     {
-        Cannon
+        Cannon,
+        MRLS
     }
 }

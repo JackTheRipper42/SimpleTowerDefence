@@ -5,11 +5,10 @@ namespace Assets.Scripts
 {
     [RequireComponent(typeof(SphereCollider))]
     [RequireComponent(typeof(Rigidbody))]
-    public class Tower : MonoBehaviour
+    public abstract class Tower : MonoBehaviour
     {
         public TowerId Id;
-        public float Range = 5f;
-        public float Damage = 0.3f;
+        public float Range = 5f;       
         public float FireRate = 2f;
 
         private List<Enemy> _availableTargets;
@@ -27,6 +26,8 @@ namespace Assets.Scripts
             _gameManager = GetComponentInParent<GameManager>();
         }
 
+        protected abstract void Fire(Enemy target);
+
         protected virtual void Update()
         {
             _availableTargets.RemoveAll(target => target == null || !target.Alive);
@@ -43,7 +44,7 @@ namespace Assets.Scripts
                 var time = _gameManager.GetTime();
                 if (time - _lastShot > 1f/FireRate)
                 {
-                    _target.SetHit(Damage);
+                    Fire(_target);
                     _lastShot = time;
                 }
             }
