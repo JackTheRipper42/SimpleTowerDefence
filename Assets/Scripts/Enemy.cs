@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.Binding;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,6 +7,9 @@ namespace Assets.Scripts
 {
     public class Enemy : MonoBehaviour
     {
+        public readonly NotifyingObject<float> HealthProperty;
+        public readonly NotifyingObject<Vector3> PositionProperty; 
+
         public EnemyId Id;
         public float Speed = 10;
         public float MaxHealth = 10;
@@ -13,15 +17,32 @@ namespace Assets.Scripts
         private float _lerpLength;
         private float _lerpPosition;
         private int _currentIndex;
-        private float _health;
         private Vector3[] _path;
         private Vector3 _offset;
         private State _state;
         private GameManager _gameManager;
 
+        public Enemy()
+        {
+            HealthProperty = new NotifyingObject<float>();
+            PositionProperty = new NotifyingObject<Vector3>();
+        }
+
         public bool Alive
         {
-            get { return _health > 0; }
+            get { return Health > 0; }
+        }
+
+        public float Health
+        {
+            get { return HealthProperty.GetValue(); }
+            private set { HealthProperty.SetValue(value); }
+        }
+
+        public Vector3 Position
+        {
+            get { return PositionProperty.GetValue(); }
+            private set { PositionProperty.SetValue(value); }
         }
 
         public void SetPath(IEnumerable<Vector3> path, Vector3 offset)
@@ -40,8 +61,8 @@ namespace Assets.Scripts
         public void SetHit(float damage)
         {
             var effectiveDamage = Mathf.Max(0f, CalculateEffectiveDamage(damage));
-            _health -= effectiveDamage;
-            if (_health <= 0f)
+            Health -= effectiveDamage;
+            if (Health <= 0f)
             {
                 _state = State.Killed;
                 _gameManager.EnemyKilled(this);
@@ -50,7 +71,7 @@ namespace Assets.Scripts
 
         protected virtual void Start()
         {
-            _health = MaxHealth;
+            Health = MaxHealth;
             _gameManager = GetComponentInParent<GameManager>();
             InitState();
         }
@@ -117,6 +138,7 @@ namespace Assets.Scripts
         private void LerpPosition(float t)
         {
             transform.position = Vector3.Lerp(_path[_currentIndex], _path[_currentIndex + 1], t) + _offset;
+            Position = transform.position;
         }
 
         private enum State

@@ -1,10 +1,16 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 
 namespace Assets.Scripts.Binding
 {
     public class BindingFactory : IBindingFactory
     {
+        private static BindingFactory _instance;
+
+        public static BindingFactory Instance
+        {
+            get { return _instance ?? (_instance = new BindingFactory()); }
+        }
+
         public IBinding CreatePropertyBinding<TSource, TTarget>(
             BindingType bindingType, 
             IDependencyProperty<TTarget> target, 

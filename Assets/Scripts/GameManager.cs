@@ -8,6 +8,7 @@ namespace Assets.Scripts
     {
         public Transform TowerContainer;
         public Transform EnemiyContainer;
+        public Canvas Canvas;
         public LevelInfo[] Levels;
         public GameObject[] Enemies;
         public GameObject[] Towers;
@@ -89,7 +90,7 @@ namespace Assets.Scripts
             var levelInfo = Levels[CurrentLevel];
             var obj = Instantiate(levelInfo.Prefab);
             obj.transform.position = new Vector3(0f, 0f, 0f);
-            obj.transform.parent = transform;
+            obj.transform.parent = Canvas.transform;
             obj.transform.name = levelInfo.Name;
             var preBuildTowers = obj.GetComponentsInChildren<Tower>();
             foreach (var turret in preBuildTowers)
