@@ -34,15 +34,17 @@ namespace Assets.Scripts.UI
 
         private static string FormatHealth(float health, float maxHealth)
         {
-            return string.Format("{0}/{1}", health.ToString("F"), maxHealth.ToString("F"));
+            return string.Format("{0}/{1}", Format(health), Format(maxHealth));
+        }
+
+        private static string Format(float value)
+        {
+            var str = value.ToString("F");
+            return str.Trim('0', '.');
         }
 
         private static Vector3 CalculatePosition(Vector3 center, Vector2 size)
         {
-            //return new Vector3(
-            //    center.x - size.x/2,
-            //    center.y - size.y,
-            //    center.z);
             return new Vector3(
                 center.x,
                 center.y - size.y,
