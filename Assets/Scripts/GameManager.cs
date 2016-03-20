@@ -19,7 +19,8 @@ namespace Assets.Scripts
         private IDictionary<TowerId, GameObject> _towerPrefabs;
         private IDictionary<EnemyId, int> _enemyCount;
         private IDictionary<EnemyId, int> _remainingEnemyCount;
-        private IDictionary<EnemyId, int> _escaptedEnemyCount; 
+        private IDictionary<EnemyId, int> _escaptedEnemyCount;
+        private HashSet<Vector3> _towerPositions; 
 
         public void EnemyExists(Enemy enemy)
         {
@@ -48,10 +49,16 @@ namespace Assets.Scripts
 
         public void SpawnTower(TowerId id, Vector3 position)
         {
+            _towerPositions.Add(position);
             var prefab = _towerPrefabs[id];
             var obj = Instantiate(prefab);
             obj.transform.parent = TowerContainer.transform;
             obj.transform.position = position;
+        }
+
+        public bool CanSpawnTower(Vector3 position)
+        {
+            return !_towerPositions.Contains(position);
         }
 
         public void SetOverallEnemyCount(IDictionary<EnemyId, int> enemyCount)
@@ -77,6 +84,7 @@ namespace Assets.Scripts
 
         protected virtual void Start()
         {
+            _towerPositions = new HashSet<Vector3>();
             _enemyPrefabs = Enemies.ToDictionary(
                 enemy => enemy.GetComponent<Enemy>().Id,
                 enemy => enemy);

@@ -27,9 +27,9 @@ namespace Assets.Scripts
                 if (Physics.Raycast(ray, out hit, float.PositiveInfinity, LayerMask.value))
                 {
                     var placeableGround = hit.transform.gameObject.GetComponent<PlaceableGround>();
-                    if (placeableGround != null)
+                    var rasterizedPosition = _rasterizer.Rasterize(hit.point);
+                    if (placeableGround != null && _gameManager.CanSpawnTower(rasterizedPosition))
                     {
-                        var rasterizedPosition = _rasterizer.Rasterize(hit.point);
                         _gameManager.SpawnTower(BuildTowerId, rasterizedPosition);
                     }
                 }
