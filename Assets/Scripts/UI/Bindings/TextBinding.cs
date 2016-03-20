@@ -26,7 +26,7 @@ namespace Assets.Scripts.UI.Bindings
                 BindingFactory.Instance,
                 new Vector3(0f,0f,0f),
                 PositionPropertyChangedCallback, 
-                PositionCoerceValueCallback);
+                null);
             SizeProperty = new DependencyProperty<Vector2>(
                 BindingFactory.Instance,
                 new Vector2(),
@@ -109,11 +109,6 @@ namespace Assets.Scripts.UI.Bindings
             {
                 Text = newValue;
             }
-        }
-
-        private Vector3 PositionCoerceValueCallback(Vector3 value)
-        {
-            return value;
         }
 
         private void PositionPropertyChangedCallback(Vector3 oldValue, Vector3 newValue)

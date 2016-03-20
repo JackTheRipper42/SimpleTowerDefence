@@ -42,7 +42,11 @@ namespace Assets.Scripts
         public Vector3 Position
         {
             get { return PositionProperty.GetValue(); }
-            private set { PositionProperty.SetValue(value); }
+            set
+            {
+                transform.position = value;
+                PositionProperty.SetValue(value);
+            }
         }
 
         public void SetPath(IEnumerable<Vector3> path, Vector3 offset)
@@ -137,8 +141,7 @@ namespace Assets.Scripts
 
         private void LerpPosition(float t)
         {
-            transform.position = Vector3.Lerp(_path[_currentIndex], _path[_currentIndex + 1], t) + _offset;
-            Position = transform.position;
+            Position = Vector3.Lerp(_path[_currentIndex], _path[_currentIndex + 1], t) + _offset;
         }
 
         private enum State

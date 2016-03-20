@@ -39,11 +39,11 @@ namespace Assets.Scripts
         {
             var prefab = _enemyPrefabs[id];
             var obj = Instantiate(prefab);
-            obj.transform.parent = EnemiyContainer.transform;
-            obj.transform.position = path[0];
             var enemy = obj.GetComponent<Enemy>();
+            obj.transform.parent = EnemiyContainer.transform;
             var offset = Random.insideUnitSphere*MaxSpawnOffset;
             offset.y = 0f;
+            enemy.Position = path[0] + offset;
             enemy.SetPath(path, offset);
         }
 
