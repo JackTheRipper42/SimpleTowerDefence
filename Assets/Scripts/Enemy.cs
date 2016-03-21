@@ -13,6 +13,7 @@ namespace Assets.Scripts
         public EnemyId Id;
         public float Speed = 10;
         public float MaxHealth = 10;
+        public Transform RendererTransform;
 
         private float _lerpLength;
         private float _lerpPosition;
@@ -91,7 +92,7 @@ namespace Assets.Scripts
                 case State.Running:
                     var effectiveSpeed = CalculateEffectiveSpeed();
                     var deltaTime = _gameManager.GetDeltaTime();
-                    _lerpPosition += (effectiveSpeed * deltaTime) / _lerpLength;
+                    _lerpPosition += (effectiveSpeed*deltaTime)/_lerpLength;
                     LerpPosition(_lerpPosition);
                     if (_lerpPosition >= 1.0f)
                     {
@@ -134,9 +135,12 @@ namespace Assets.Scripts
         private void InitLerp(int index)
         {
             _currentIndex = index;
+            var vector = _path[index + 1] - _path[index];
             _lerpPosition = 0;
-            _lerpLength = (_path[index + 1] - _path[index]).magnitude;
+            _lerpLength = vector.magnitude;
             transform.position = _path[index] + _offset;
+            var direction = Quaternion.LookRotation(vector).eulerAngles;
+            RendererTransform.rotation = Quaternion.Euler(90f, direction.y - 90f, 0f);
         }
 
         private void LerpPosition(float t)
