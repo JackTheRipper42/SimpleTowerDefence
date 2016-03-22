@@ -7,6 +7,7 @@ namespace Assets.Scripts
     [RequireComponent(typeof(Rigidbody))]
     public abstract class Tower : MonoBehaviour
     {
+        public Transform TowerTransform;
         public TowerId Id;
         public float Range = 5f;       
         public float FireRate = 2f;
@@ -39,7 +40,8 @@ namespace Assets.Scripts
 
             if (_target != null)
             {
-                transform.rotation = Quaternion.LookRotation(_target.transform.position - transform.position);
+                var direction = Quaternion.LookRotation(_target.transform.position - transform.position).eulerAngles;
+                TowerTransform.rotation = Quaternion.Euler(90f, direction.y, 0f);
 
                 var time = _gameManager.GetTime();
                 if (time - _lastShot > 1f/FireRate)
