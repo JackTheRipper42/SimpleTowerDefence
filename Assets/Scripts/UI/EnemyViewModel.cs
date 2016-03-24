@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Binding;
+﻿using System.Globalization;
+using Assets.Scripts.Binding;
 using UnityEngine;
 
 namespace Assets.Scripts.UI
@@ -9,11 +10,14 @@ namespace Assets.Scripts.UI
         public readonly NotifyingObject<Vector3> PositionProperty = new NotifyingObject<Vector3>();
         public readonly NotifyingObject<Vector2> SizeProperty = new NotifyingObject<Vector2>();
 
+        private readonly StringFormatter _stringFormatter;
+
         private Vector3 _center;
 
         public EnemyViewModel()
         {
             SizeProperty.PropertyChanged += SizePropertyOnPropertyChanged;
+            _stringFormatter = new StringFormatter(CultureInfo.CurrentCulture);
         }
 
         public void OnHealthChanged(float health, float maxHealth)
@@ -32,15 +36,12 @@ namespace Assets.Scripts.UI
             PositionProperty.SetValue(CalculatePosition(_center, e.NewValue));
         }
 
-        private static string FormatHealth(float health, float maxHealth)
+        private string FormatHealth(float health, float maxHealth)
         {
-            return string.Format("{0}/{1}", Format(health), Format(maxHealth));
-        }
-
-        private static string Format(float value)
-        {
-            var str = value.ToString("F");
-            return str.Trim('0', '.');
+            return string.Format(
+                "{0}/{1}", 
+                _stringFormatter.Format(health), 
+                _stringFormatter.Format(maxHealth));
         }
 
         private static Vector3 CalculatePosition(Vector3 center, Vector2 size)
