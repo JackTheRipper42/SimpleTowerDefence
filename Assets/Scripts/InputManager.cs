@@ -7,8 +7,13 @@ namespace Assets.Scripts
         public LayerMask LayerMask;
         public string PrimaryMouseButtonAxis = "Fire1";
         public string SecondaryMouseButtonAxis = "Fire2";
-        public TowerId BuildTowerId;
+        public string SelectCannonTypeAxis = "Select Cannon Type";
+        public string SelectGattlingTypeAxis = "Select Gattling Type";
+        public string SelectRailgunTypeAxis = "Select Railgun Type";
+        public string SelectMissileTypeAxis = "Select Missile Type";
+        public string SelectMRLSTypeAxis = "Select MRLS Type";
 
+        private TowerId _buildTowerId;
         private GameManager _gameManager;
         private Rasterizer _rasterizer;
 
@@ -20,6 +25,27 @@ namespace Assets.Scripts
 
         protected virtual void Update()
         {
+            if (Input.GetButtonDown(SelectCannonTypeAxis))
+            {
+                _buildTowerId = TowerId.Cannon;
+            }
+            if (Input.GetButtonDown(SelectGattlingTypeAxis))
+            {
+                _buildTowerId = TowerId.Gattling;
+            }
+            if (Input.GetButtonDown(SelectRailgunTypeAxis))
+            {
+                _buildTowerId = TowerId.Railgun;
+            }
+            if (Input.GetButtonDown(SelectMissileTypeAxis))
+            {
+                _buildTowerId = TowerId.Missile;
+            }
+            if (Input.GetButtonDown(SelectMRLSTypeAxis))
+            {
+                _buildTowerId = TowerId.MRLS;
+            }
+
             if (Input.GetButtonDown(PrimaryMouseButtonAxis))
             {
                 var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -30,7 +56,7 @@ namespace Assets.Scripts
                     var rasterizedPosition = _rasterizer.Rasterize(hit.point);
                     if (placeableGround != null && _gameManager.CanSpawnTower(rasterizedPosition))
                     {
-                        _gameManager.SpawnTower(BuildTowerId, rasterizedPosition);
+                        _gameManager.SpawnTower(_buildTowerId, rasterizedPosition);
                     }
                 }
             }
