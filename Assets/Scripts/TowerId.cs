@@ -3,6 +3,9 @@
     public enum TowerId
     {
         Cannon,
-        MRLS
+        MRLS,
+        Gattling,
+        Railgun,
+        Missile
     }
 }
