@@ -76,7 +76,7 @@ namespace Assets.Scripts
 
         protected virtual void OnTriggerExit(Collider other)
         {
-            var enemy = other.GetComponent<Enemy>();
+            var enemy = other.GetComponentInParent<Enemy>();
             if (enemy != null)
             {
                 _availableTargets.Remove(enemy);
