@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Assets.Scripts.Lua;
 using MoonSharp.Interpreter;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
@@ -120,7 +122,7 @@ namespace Assets.Scripts
             UserData.RegisterType<ISpawner>();
             UserData.RegisterType<IDebugger>();
 
-            script.Globals.Set("debug", UserData.Create(new Debugger()));
+            script.Globals.Set(LuaScriptConstants.DebugGlobalName, UserData.Create(new Debugger()));
 
             var paths = obj.GetComponentsInChildren<Path>();
             var spawners = new List<Spawner>();
@@ -128,15 +130,24 @@ namespace Assets.Scripts
             {
                 var spawner = new Spawner(path.GetPath());
                 spawners.Add(spawner);
-                var spawnerName = string.Format("{0}Spawner", path.name);
+                var spawnerName = string.Format("{0}{1}", path.name, LuaScriptConstants.SpawnerGlobalNameSuffix);
                 script.Globals.Set(spawnerName, UserData.Create(spawner));
             }
-            
-            var scriptPath = new FileInfo(System.IO.Path.Combine("Assets/LevelScripts", levelInfo.Script));
+
+            var scriptPath = new FileInfo(System.IO.Path.Combine(LuaScriptConstants.LevelScriptFolder, levelInfo.Script));
             var scriptCode = File.ReadAllText(scriptPath.FullName);
             script.DoString(scriptCode);
 
-            script.Call(script.Globals["setupWave"], 0);
+            var setupSpawnFunction = script.Globals.Get(LuaScriptConstants.SetupWaveFunctionName);
+            if (setupSpawnFunction.IsNil())
+            {
+                throw new InvalidOperationException(string.Format(
+                    "The '{0}' function does not exist in script '{1}'.",
+                    LuaScriptConstants.SetupWaveFunctionName,
+                    scriptPath.Name));
+            }
+
+            script.Call(script.Globals[LuaScriptConstants.SetupWaveFunctionName], 0);
 
             foreach (var spawner in spawners)
             {
