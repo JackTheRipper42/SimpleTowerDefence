@@ -1,4 +1,6 @@
 function setupWave(wave)
+	assert(Path1Spawner~=nil, "Path1Spawner does not exist.");
+
 	debug.Log(string.format("wave %i", wave));
 	Path1Spawner.Wait(4);
 	for i=1,10 do 
