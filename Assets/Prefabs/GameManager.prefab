@@ -225,6 +225,7 @@ MonoBehaviour:
   Levels:
   - Name: Test Level
     Prefab: {fileID: 173092, guid: 364280444361ced41a018e16e1019a93, type: 2}
+    Script: TestLevel.lua
   Enemies:
   - {fileID: 114376, guid: cda527f37cd5de949b349766f2c877cb, type: 2}
   - {fileID: 190920, guid: cd48dc6c12aaca84390938eaff139878, type: 2}

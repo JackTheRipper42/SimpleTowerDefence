@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using MoonSharp.Interpreter;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -17,21 +20,21 @@ namespace Assets.Scripts
 
         private IDictionary<EnemyId, GameObject> _enemyPrefabs;
         private IDictionary<TowerId, GameObject> _towerPrefabs;
-        private IDictionary<EnemyId, int> _enemyCount;
-        private IDictionary<EnemyId, int> _remainingEnemyCount;
-        private IDictionary<EnemyId, int> _escaptedEnemyCount;
+        //private IDictionary<EnemyId, int> _enemyCount;
+        //private IDictionary<EnemyId, int> _remainingEnemyCount;
+        //private IDictionary<EnemyId, int> _escaptedEnemyCount;
         private HashSet<Vector3> _towerPositions; 
 
         public void EnemyExists(Enemy enemy)
         {
-            _escaptedEnemyCount[enemy.Id] += 1;
-            _remainingEnemyCount[enemy.Id] -= 1;
+            //_escaptedEnemyCount[enemy.Id] += 1;
+            //_remainingEnemyCount[enemy.Id] -= 1;
             DestroyEnemy(enemy);
         }
 
         public void EnemyKilled(Enemy enemy)
         {
-            _remainingEnemyCount[enemy.Id] -= 1;
+            //_remainingEnemyCount[enemy.Id] -= 1;
             DestroyEnemy(enemy);
         }
 
@@ -61,16 +64,16 @@ namespace Assets.Scripts
             return !_towerPositions.Contains(position);
         }
 
-        public void SetOverallEnemyCount(IDictionary<EnemyId, int> enemyCount)
-        {
-            _enemyCount = enemyCount;
-            _remainingEnemyCount = enemyCount.ToDictionary(
-                keyValuePair => keyValuePair.Key,
-                keyValuePair => keyValuePair.Value);
-            _escaptedEnemyCount = enemyCount.ToDictionary(
-                keyValuePair => keyValuePair.Key,
-                keyValuePair => 0);
-        }
+        //public void SetOverallEnemyCount(IDictionary<EnemyId, int> enemyCount)
+        //{
+        //    _enemyCount = enemyCount;
+        //    _remainingEnemyCount = enemyCount.ToDictionary(
+        //        keyValuePair => keyValuePair.Key,
+        //        keyValuePair => keyValuePair.Value);
+        //    _escaptedEnemyCount = enemyCount.ToDictionary(
+        //        keyValuePair => keyValuePair.Key,
+        //        keyValuePair => 0);
+        //}
 
         public float GetTime()
         {
@@ -91,25 +94,75 @@ namespace Assets.Scripts
             _towerPrefabs = Towers.ToDictionary(
                 tower => tower.GetComponent<Tower>().Id,
                 tower => tower);
-            _enemyCount = new Dictionary<EnemyId, int>();
-            _remainingEnemyCount = new Dictionary<EnemyId, int>();
-            _escaptedEnemyCount = new Dictionary<EnemyId, int>();
+            //_enemyCount = new Dictionary<EnemyId, int>();
+            //_remainingEnemyCount = new Dictionary<EnemyId, int>();
+            //_escaptedEnemyCount = new Dictionary<EnemyId, int>();
 
             var levelInfo = Levels[CurrentLevel];
-            var obj = Instantiate(levelInfo.Prefab);
-            obj.transform.position = new Vector3(0f, 0f, 0f);
-            obj.transform.parent = Canvas.transform;
-            obj.transform.name = levelInfo.Name;
-            var preBuildTowers = obj.GetComponentsInChildren<Tower>();
-            foreach (var turret in preBuildTowers)
-            {
-                turret.transform.parent = TowerContainer;
-            }
+            LoadLevel(levelInfo);
         }
 
         private void DestroyEnemy(Enemy enemy)
         {
             Destroy(enemy.gameObject);
+        }
+
+        private void LoadLevel(LevelInfo levelInfo)
+        {
+            var obj = Instantiate(levelInfo.Prefab);
+            obj.transform.position = new Vector3(0f, 0f, 0f);
+            obj.transform.parent = Canvas.transform;
+            obj.transform.name = levelInfo.Name;
+
+
+            UserData.RegisterType<ISpawner>();
+
+            var script = new Script();
+
+            var paths = obj.GetComponentsInChildren<Path>();
+            var spawners = new List<Spawner>();
+            foreach (var path in paths)
+            {
+                var spawner = new Spawner(path.GetPath());
+                spawners.Add(spawner);
+                var spawnerName = string.Format("{0}Spawner", path.name);
+                script.Globals.Set(spawnerName, UserData.Create(spawner));
+            }
+            
+            var scriptPath = new FileInfo(System.IO.Path.Combine("Assets/LevelScripts", levelInfo.Script));
+            var scriptCode = File.ReadAllText(scriptPath.FullName);
+            script.DoString(scriptCode);
+
+            script.Call(script.Globals["setupWave"], 0);
+
+            foreach (var spawner in spawners)
+            {
+                StartCoroutine(SpawnCoroutine(spawner));
+            }
+        }
+
+        private IEnumerator SpawnCoroutine(Spawner spawner)
+        {
+            foreach (var action in spawner.Actions)
+            {
+                var waitAction = action as WaitAction;
+                if (waitAction != null)
+                {
+                    yield return new WaitForSeconds((float) waitAction.Time);
+                }
+
+                var spawnAction = action as SpawnAction;
+                if (spawnAction != null)
+                {
+                    SpawnEnemy(spawnAction.Id, spawner.Path);
+                }
+
+                var debugAction = action as DebugAction;
+                if (debugAction != null)
+                {
+                    Debug.Log(debugAction.Message);
+                }
+            }
         }
     }
 }
