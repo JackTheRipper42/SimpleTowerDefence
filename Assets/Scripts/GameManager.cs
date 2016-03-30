@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Assets.Scripts.Lua;
 using MoonSharp.Interpreter;
 using UnityEngine;
 
@@ -114,10 +115,12 @@ namespace Assets.Scripts
             obj.transform.parent = Canvas.transform;
             obj.transform.name = levelInfo.Name;
 
+            var script = new Script(CoreModules.Preset_HardSandbox);
 
             UserData.RegisterType<ISpawner>();
+            UserData.RegisterType<IDebugger>();
 
-            var script = new Script();
+            script.Globals.Set("debug", UserData.Create(new Debugger()));
 
             var paths = obj.GetComponentsInChildren<Path>();
             var spawners = new List<Spawner>();

@@ -1,4 +1,5 @@
 function setupWave(wave)
+	debug.Log(string.format("wave %i", wave));
 	Path1Spawner.Wait(4);
 	for i=1,10 do 
 		for i=1,5 do
