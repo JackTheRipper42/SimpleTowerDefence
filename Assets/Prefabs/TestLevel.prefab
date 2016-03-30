@@ -236,7 +236,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 498234}
-  - 114: {fileID: 11427036}
   m_Layer: 0
   m_Name: TestLevel
   m_TagString: Untagged
@@ -320,7 +319,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 499548}
-  - 114: {fileID: 11457660}
   m_Layer: 0
   m_Name: Path1
   m_TagString: Untagged
@@ -934,19 +932,6 @@ MeshCollider:
   serializedVersion: 2
   m_Convex: 0
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &11427036
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 173092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81d1166daee687419a1a5ddafd171d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Paths:
-  - {fileID: 11457660}
 --- !u!114 &11440446
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -956,17 +941,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c32f0fe8a6367245be8c3bbaf1d5cfd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &11457660
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 199812}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5f73555cface374289b364d0f1ff96d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!135 &13500240

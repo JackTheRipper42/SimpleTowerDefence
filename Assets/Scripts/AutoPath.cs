@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts
 {
-    public abstract class AutoPath : Path
+    public class AutoPath : Path
     {
         protected override Vector3[] GetPath()
         {

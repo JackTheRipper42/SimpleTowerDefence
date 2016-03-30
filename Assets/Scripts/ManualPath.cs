@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public abstract class ManualPath : Path
+    public class ManualPath : Path
     {
         public Transform[] Nodes;
 
