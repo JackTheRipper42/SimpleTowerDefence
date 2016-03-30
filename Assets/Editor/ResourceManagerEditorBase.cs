@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
+using Assets.Scripts.Binding;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Scripts.Binding
+namespace Assets.Editor
 {
-    public abstract class ResourceManagerEditorBase : Editor
+    public abstract class ResourceManagerEditorBase : UnityEditor.Editor
     {
         private const float FoldoutSpace = 12;
 

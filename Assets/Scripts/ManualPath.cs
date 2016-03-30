@@ -3,13 +3,21 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public abstract class ManualPath : Path
+    public class ManualPath : Path
     {
         public Transform[] Nodes;
 
-        protected override Vector3[] GetPath()
+        public override Vector3[] GetPath()
         {
             return Nodes.Select(node => node.transform.position).ToArray();
+        }
+
+        protected virtual void Start()
+        {
+            foreach (var node in Nodes)
+            {
+                node.gameObject.SetActive(false);
+            }
         }
     }
 }

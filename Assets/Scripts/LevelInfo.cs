@@ -8,5 +8,6 @@ namespace Assets.Scripts
     {
         public string Name;
         public GameObject Prefab;
+        public string Script;
     }
 }

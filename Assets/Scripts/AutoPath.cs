@@ -2,9 +2,9 @@
 
 namespace Assets.Scripts
 {
-    public abstract class AutoPath : Path
+    public class AutoPath : Path
     {
-        protected override Vector3[] GetPath()
+        public override Vector3[] GetPath()
         {
             var path = new Vector3[transform.childCount];
             for (var index = 0; index < transform.childCount; index++)
@@ -14,6 +14,15 @@ namespace Assets.Scripts
                 child.gameObject.SetActive(false);
             }
             return path;
+        }
+
+        protected virtual void Start()
+        {
+            for (var index = 0; index < transform.childCount; index++)
+            {
+                var child = transform.GetChild(index);
+                child.gameObject.SetActive(false);
+            }
         }
     }
 }
