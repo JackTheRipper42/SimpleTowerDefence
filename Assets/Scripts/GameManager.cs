@@ -23,21 +23,15 @@ namespace Assets.Scripts
 
         private IDictionary<EnemyId, GameObject> _enemyPrefabs;
         private IDictionary<TowerId, GameObject> _towerPrefabs;
-        //private IDictionary<EnemyId, int> _enemyCount;
-        //private IDictionary<EnemyId, int> _remainingEnemyCount;
-        //private IDictionary<EnemyId, int> _escaptedEnemyCount;
         private HashSet<Vector3> _towerPositions; 
 
         public void EnemyExists(Enemy enemy)
         {
-            //_escaptedEnemyCount[enemy.Id] += 1;
-            //_remainingEnemyCount[enemy.Id] -= 1;
             DestroyEnemy(enemy);
         }
 
         public void EnemyKilled(Enemy enemy)
         {
-            //_remainingEnemyCount[enemy.Id] -= 1;
             DestroyEnemy(enemy);
         }
 
@@ -67,17 +61,6 @@ namespace Assets.Scripts
             return !_towerPositions.Contains(position);
         }
 
-        //public void SetOverallEnemyCount(IDictionary<EnemyId, int> enemyCount)
-        //{
-        //    _enemyCount = enemyCount;
-        //    _remainingEnemyCount = enemyCount.ToDictionary(
-        //        keyValuePair => keyValuePair.Key,
-        //        keyValuePair => keyValuePair.Value);
-        //    _escaptedEnemyCount = enemyCount.ToDictionary(
-        //        keyValuePair => keyValuePair.Key,
-        //        keyValuePair => 0);
-        //}
-
         public float GetTime()
         {
             return Time.time;
@@ -97,9 +80,6 @@ namespace Assets.Scripts
             _towerPrefabs = Towers.ToDictionary(
                 tower => tower.GetComponent<Tower>().Id,
                 tower => tower);
-            //_enemyCount = new Dictionary<EnemyId, int>();
-            //_remainingEnemyCount = new Dictionary<EnemyId, int>();
-            //_escaptedEnemyCount = new Dictionary<EnemyId, int>();
 
             var levelInfo = Levels[CurrentLevel];
             LoadLevel(levelInfo);

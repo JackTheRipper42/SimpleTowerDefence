@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Assets.Scripts.Lua
+﻿namespace Assets.Scripts.Lua
 {
     public static class LuaScriptConstants
     {
