@@ -8,6 +8,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Assets.Scripts.Xml;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -105,6 +106,8 @@ namespace Assets.Scripts
                 tower => tower.GetComponent<Tower>().Id,
                 tower => tower);
 
+            var enemies = GetEnemies().ToList();
+
             var levels = GetLevels();
             LoadLevel(levels.First());
         }
@@ -140,7 +143,6 @@ namespace Assets.Scripts
         {
             var rootPath = System.IO.Path.Combine(Application.streamingAssetsPath, "Levels");
             var folders = Directory.GetDirectories(rootPath);
-            var levels = new List<Level>();
 
             foreach (var folder in folders)
             {
@@ -149,29 +151,43 @@ namespace Assets.Scripts
 
                 if (levelXml.Exists && levelLua.Exists)
                 {
-                    var asset = new XmlDocument();
-
-                    var schemaReader = new XmlTextReader(System.IO.Path.Combine(rootPath, "level.xsd"));
-                    var schema = XmlSchema.Read(schemaReader, (o, e) => { });
-                    asset.Load(levelXml.FullName);
-                    asset.Schemas.Add(schema);
-                    asset.Validate((o, e) => { });
-
+                    ValidateXmlDocument(levelXml.FullName, System.IO.Path.Combine(rootPath, "level.xsd"));
                     using (var stream = new FileStream(levelXml.FullName, FileMode.Open, FileAccess.Read))
                     {
                         var serializer = new XmlSerializer(typeof(LevelInfo));
                         var levelInfo = (LevelInfo) serializer.Deserialize(stream);                        
                         var sceneName = string.Format("Scenes/Maps/{0}", levelInfo.Map);
 
-                        // check if the scene exists
-                        SceneManager.GetSceneByName(sceneName);
-
-                        levels.Add(new Level(levelInfo.Name, sceneName, levelLua.FullName));
+                        yield return new Level(levelInfo.Name, sceneName, levelLua.FullName);
                     }
                 }
             }
+        }
 
-            return levels;
+        private static IEnumerable<EnemyInfo> GetEnemies()
+        {
+            var xmlPath = System.IO.Path.Combine(Application.streamingAssetsPath, "enemies.xml");
+            var xsdPath = System.IO.Path.Combine(Application.streamingAssetsPath, "enemies.xsd");
+            ValidateXmlDocument(xmlPath, xsdPath);
+
+            using (var stream = new FileStream(xmlPath, FileMode.Open, FileAccess.Read))
+            {
+                var serializer = new XmlSerializer(typeof(Enemies));
+                var enemies = (Enemies) serializer.Deserialize(stream);
+                yield return enemies.SmallWalker;
+                yield return enemies.BigWalker;
+            }
+        }
+
+        private static void ValidateXmlDocument(string xmlPath, string xsdPath)
+        {
+            var xmlDocument = new XmlDocument();
+            var schemaReader = new XmlTextReader(xsdPath);
+            var schema = XmlSchema.Read(schemaReader, (o, e) => { });
+            xmlDocument.Load(xmlPath);
+            xmlDocument.Schemas.Add(schema);
+            xmlDocument.Validate((o, e) => { });
+
         }
 
         private IEnumerator LoadLevelCoroutine(Level level)
