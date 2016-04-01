@@ -1,24 +1,19 @@
 ﻿using JetBrains.Annotations;
 using System;
-using UnityEngine;
 
 namespace Assets.Scripts
 {
     public class Level
     {
         private readonly string _name;
-        private readonly GameObject _prefab;
+        private readonly string _map;
         private readonly string _scriptPath;
 
-        public Level([NotNull] string name, [NotNull] GameObject prefab, [NotNull] string scriptPath)
+        public Level([NotNull] string name, string map, [NotNull] string scriptPath)
         {
             if (name == null)
             {
                 throw new ArgumentNullException("name");
-            }
-            if (prefab == null)
-            {
-                throw new ArgumentNullException("prefab");
             }
             if (scriptPath == null)
             {
@@ -26,7 +21,7 @@ namespace Assets.Scripts
             }
 
             _name = name;
-            _prefab = prefab;
+            _map = map;
             _scriptPath = scriptPath;
         }
 
@@ -35,9 +30,9 @@ namespace Assets.Scripts
             get { return _name; }
         }
 
-        public GameObject Prefab
+        public string Map
         {
-            get { return _prefab; }
+            get { return _map; }
         }
 
         public string ScriptPath

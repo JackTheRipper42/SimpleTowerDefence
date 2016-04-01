@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using Assets.Scripts.Lua;
 using MoonSharp.Interpreter;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
@@ -18,16 +19,14 @@ namespace Assets.Scripts
         public Transform TowerContainer;
         public Transform EnemiyContainer;
         public Canvas Canvas;
-        public GameObject[] Maps;
         public GameObject[] Enemies;
         public GameObject[] Towers;
         [Range(0f, 2f)] public float MaxSpawnOffset = 1f;
 
         private IDictionary<EnemyId, GameObject> _enemyPrefabs;
         private IDictionary<TowerId, GameObject> _towerPrefabs;
-        private IDictionary<string, GameObject> _mapPrefabs;
         private HashSet<Vector3> _towerPositions;
-
+        
         public void EnemyExits(Enemy enemy)
         {
             DestroyEnemy(enemy);
@@ -83,12 +82,9 @@ namespace Assets.Scripts
             _towerPrefabs = Towers.ToDictionary(
                 tower => tower.GetComponent<Tower>().Id,
                 tower => tower);
-            _mapPrefabs = Maps.ToDictionary(
-                map => map.name,
-                map => map);
 
             var levels = GetLevels();
-            LoadLevel(levels.First());
+            StartCoroutine(LoadLevel(levels.First()));
         }
 
         private void DestroyEnemy(Enemy enemy)
@@ -121,7 +117,7 @@ namespace Assets.Scripts
                     {
                         var serializer = new XmlSerializer(typeof(LevelInfo));
                         var levelInfo = (LevelInfo) serializer.Deserialize(stream);
-                        levels.Add(new Level(levelInfo.Name, _mapPrefabs[levelInfo.Map], levelLua.FullName));
+                        levels.Add(new Level(levelInfo.Name, levelInfo.Map, levelLua.FullName));
                     }
                 }
             }
@@ -129,12 +125,20 @@ namespace Assets.Scripts
             return levels;
         }
 
-        private void LoadLevel(Level level)
+        private IEnumerator LoadLevel(Level level)
         {
-            var obj = Instantiate(level.Prefab);
-            obj.transform.position = new Vector3(0f, 0f, 0f);
-            obj.transform.parent = Canvas.transform;
-            obj.transform.name = level.Name;
+            SceneManager.LoadScene(level.Map, LoadSceneMode.Additive);
+
+            var scene = SceneManager.GetSceneByName(level.Map);
+
+            while (!scene.isLoaded)
+            {
+                yield return new WaitForEndOfFrame();
+                scene = SceneManager.GetSceneByName(level.Map);
+            }
+
+            var rootGameObject = scene.GetRootGameObjects();
+            var paths = rootGameObject.SelectMany(obj => obj.GetComponentsInChildren<Path>());
 
             var script = new Script(CoreModules.Preset_HardSandbox);
 
@@ -143,7 +147,6 @@ namespace Assets.Scripts
 
             script.Globals.Set(LuaScriptConstants.DebugGlobalName, UserData.Create(new Debugger()));
 
-            var paths = obj.GetComponentsInChildren<Path>();
             var spawners = new List<Spawner>();
             foreach (var path in paths)
             {
