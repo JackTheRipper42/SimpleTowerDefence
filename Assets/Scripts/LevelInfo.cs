@@ -1,13 +1,17 @@
 ﻿using System;
-using UnityEngine;
 
 namespace Assets.Scripts
 {
+
+
+
     [Serializable]
     public class LevelInfo
     {
-        public string Name;
-        public GameObject Prefab;
-        public string Script;
+
+        public string Name { get; set; }
+
+        public string Map { get; set; }
     }
+
 }

@@ -103,7 +103,7 @@ namespace Assets.Scripts
                         else
                         {
                             _state = State.Finished;
-                            _gameManager.EnemyExists(this);
+                            _gameManager.EnemyExits(this);
                         }
                     }
                     break;

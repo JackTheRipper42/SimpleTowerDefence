@@ -222,10 +222,8 @@ MonoBehaviour:
   TowerContainer: {fileID: 439244}
   EnemiyContainer: {fileID: 417978}
   Canvas: {fileID: 22300470}
-  Levels:
-  - Name: Test Level
-    Prefab: {fileID: 173092, guid: 364280444361ced41a018e16e1019a93, type: 2}
-    Script: TestLevel.lua
+  Maps:
+  - {fileID: 173092, guid: 364280444361ced41a018e16e1019a93, type: 2}
   Enemies:
   - {fileID: 114376, guid: cda527f37cd5de949b349766f2c877cb, type: 2}
   - {fileID: 190920, guid: cd48dc6c12aaca84390938eaff139878, type: 2}
@@ -235,7 +233,6 @@ MonoBehaviour:
   - {fileID: 170732, guid: 034e768bd42fef849acd586191446636, type: 2}
   - {fileID: 116828, guid: 371cb08264c96de44b478ace6ad39f37, type: 2}
   - {fileID: 152556, guid: 153221fe56cbd3b4cb41c54b0c92ba28, type: 2}
-  CurrentLevel: 0
   MaxSpawnOffset: 0.654
 --- !u!114 &11495570
 MonoBehaviour:

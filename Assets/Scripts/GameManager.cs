@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Assets.Scripts.Lua;
 using MoonSharp.Interpreter;
 using UnityEngine;
@@ -15,17 +18,17 @@ namespace Assets.Scripts
         public Transform TowerContainer;
         public Transform EnemiyContainer;
         public Canvas Canvas;
-        public LevelInfo[] Levels;
+        public GameObject[] Maps;
         public GameObject[] Enemies;
         public GameObject[] Towers;
-        public int CurrentLevel;
         [Range(0f, 2f)] public float MaxSpawnOffset = 1f;
 
         private IDictionary<EnemyId, GameObject> _enemyPrefabs;
         private IDictionary<TowerId, GameObject> _towerPrefabs;
-        private HashSet<Vector3> _towerPositions; 
+        private IDictionary<string, GameObject> _mapPrefabs;
+        private HashSet<Vector3> _towerPositions;
 
-        public void EnemyExists(Enemy enemy)
+        public void EnemyExits(Enemy enemy)
         {
             DestroyEnemy(enemy);
         }
@@ -80,9 +83,12 @@ namespace Assets.Scripts
             _towerPrefabs = Towers.ToDictionary(
                 tower => tower.GetComponent<Tower>().Id,
                 tower => tower);
+            _mapPrefabs = Maps.ToDictionary(
+                map => map.name,
+                map => map);
 
-            var levelInfo = Levels[CurrentLevel];
-            LoadLevel(levelInfo);
+            var levels = GetLevels();
+            LoadLevel(levels.First());
         }
 
         private void DestroyEnemy(Enemy enemy)
@@ -90,12 +96,45 @@ namespace Assets.Scripts
             Destroy(enemy.gameObject);
         }
 
-        private void LoadLevel(LevelInfo levelInfo)
+        private IEnumerable<Level> GetLevels()
         {
-            var obj = Instantiate(levelInfo.Prefab);
+            var rootPath = System.IO.Path.Combine(Application.streamingAssetsPath, "Levels");
+            var folders = Directory.GetDirectories(rootPath);
+            var levels = new List<Level>();
+
+            foreach (var folder in folders)
+            {
+                var levelXml = new FileInfo(System.IO.Path.Combine(folder, "level.xml"));
+                var levelLua = new FileInfo(System.IO.Path.Combine(folder, "level.lua"));
+
+                if (levelXml.Exists && levelLua.Exists)
+                {
+                    var asset = new XmlDocument();
+
+                    var schemaReader = new XmlTextReader(System.IO.Path.Combine(rootPath, "level.xsd"));
+                    var schema = XmlSchema.Read(schemaReader, (o, e) => { });
+                    asset.Load(levelXml.FullName);
+                    asset.Schemas.Add(schema);
+                    asset.Validate((o, e) => { });
+
+                    using (var stream = new FileStream(levelXml.FullName, FileMode.Open, FileAccess.Read))
+                    {
+                        var serializer = new XmlSerializer(typeof(LevelInfo));
+                        var levelInfo = (LevelInfo) serializer.Deserialize(stream);
+                        levels.Add(new Level(levelInfo.Name, _mapPrefabs[levelInfo.Map], levelLua.FullName));
+                    }
+                }
+            }
+
+            return levels;
+        }
+
+        private void LoadLevel(Level level)
+        {
+            var obj = Instantiate(level.Prefab);
             obj.transform.position = new Vector3(0f, 0f, 0f);
             obj.transform.parent = Canvas.transform;
-            obj.transform.name = levelInfo.Name;
+            obj.transform.name = level.Name;
 
             var script = new Script(CoreModules.Preset_HardSandbox);
 
@@ -114,7 +153,7 @@ namespace Assets.Scripts
                 script.Globals.Set(spawnerName, UserData.Create(spawner));
             }
 
-            var scriptPath = new FileInfo(System.IO.Path.Combine(LuaScriptConstants.LevelScriptFolder, levelInfo.Script));
+            var scriptPath = new FileInfo(level.ScriptPath);
             var scriptCode = File.ReadAllText(scriptPath.FullName);
             script.DoString(scriptCode);
 
