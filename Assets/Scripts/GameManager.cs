@@ -92,7 +92,7 @@ namespace Assets.Scripts
             Destroy(enemy.gameObject);
         }
 
-        private IEnumerable<Level> GetLevels()
+        private static IEnumerable<Level> GetLevels()
         {
             var rootPath = System.IO.Path.Combine(Application.streamingAssetsPath, "Levels");
             var folders = Directory.GetDirectories(rootPath);
@@ -116,8 +116,13 @@ namespace Assets.Scripts
                     using (var stream = new FileStream(levelXml.FullName, FileMode.Open, FileAccess.Read))
                     {
                         var serializer = new XmlSerializer(typeof(LevelInfo));
-                        var levelInfo = (LevelInfo) serializer.Deserialize(stream);
-                        levels.Add(new Level(levelInfo.Name, levelInfo.Map, levelLua.FullName));
+                        var levelInfo = (LevelInfo) serializer.Deserialize(stream);                        
+                        var sceneName = string.Format("Scenes/Maps/{0}", levelInfo.Map);
+
+                        // check if the scene exists
+                        SceneManager.GetSceneByName(sceneName);
+
+                        levels.Add(new Level(levelInfo.Name, sceneName, levelLua.FullName));
                     }
                 }
             }
@@ -127,14 +132,12 @@ namespace Assets.Scripts
 
         private IEnumerator LoadLevel(Level level)
         {
-            SceneManager.LoadScene(level.Map, LoadSceneMode.Additive);
-
-            var scene = SceneManager.GetSceneByName(level.Map);
-
+            SceneManager.LoadScene(level.SceneName, LoadSceneMode.Additive);
+            var scene = new Scene();
             while (!scene.isLoaded)
             {
                 yield return new WaitForEndOfFrame();
-                scene = SceneManager.GetSceneByName(level.Map);
+                scene = SceneManager.GetSceneByName(level.SceneName);
             }
 
             var rootGameObject = scene.GetRootGameObjects();

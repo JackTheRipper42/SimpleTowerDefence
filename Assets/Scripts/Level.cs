@@ -6,14 +6,18 @@ namespace Assets.Scripts
     public class Level
     {
         private readonly string _name;
-        private readonly string _map;
+        private readonly string _sceneName;
         private readonly string _scriptPath;
 
-        public Level([NotNull] string name, string map, [NotNull] string scriptPath)
+        public Level([NotNull] string name, [NotNull] string sceneName, [NotNull] string scriptPath)
         {
             if (name == null)
             {
                 throw new ArgumentNullException("name");
+            }
+            if (sceneName == null)
+            {
+                throw new ArgumentNullException("sceneName");
             }
             if (scriptPath == null)
             {
@@ -21,7 +25,7 @@ namespace Assets.Scripts
             }
 
             _name = name;
-            _map = map;
+            _sceneName = sceneName;
             _scriptPath = scriptPath;
         }
 
@@ -30,9 +34,9 @@ namespace Assets.Scripts
             get { return _name; }
         }
 
-        public string Map
+        public string SceneName
         {
-            get { return _map; }
+            get { return _sceneName; }
         }
 
         public string ScriptPath
