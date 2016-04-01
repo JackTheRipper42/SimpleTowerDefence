@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.Scripts.Lua;
+using MoonSharp.Interpreter;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -6,8 +8,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Assets.Scripts.Lua;
-using MoonSharp.Interpreter;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -27,26 +28,24 @@ namespace Assets.Scripts
         private IDictionary<TowerId, GameObject> _towerPrefabs;
         private HashSet<Vector3> _towerPositions;
         
-        public void EnemyExits(Enemy enemy)
+        public void EnemyExits([NotNull] Enemy enemy)
         {
+            if (enemy == null)
+            {
+                throw new ArgumentNullException("enemy");
+            }
+
             DestroyEnemy(enemy);
         }
 
-        public void EnemyKilled(Enemy enemy)
+        public void EnemyKilled([NotNull] Enemy enemy)
         {
-            DestroyEnemy(enemy);
-        }
+            if (enemy == null)
+            {
+                throw new ArgumentNullException("enemy");
+            }
 
-        public void SpawnEnemy(EnemyId id, IList<Vector3> path)
-        {
-            var prefab = _enemyPrefabs[id];
-            var obj = Instantiate(prefab);
-            var enemy = obj.GetComponent<Enemy>();
-            obj.transform.parent = EnemiyContainer.transform;
-            var offset = Random.insideUnitSphere*MaxSpawnOffset;
-            offset.y = 0f;
-            enemy.Position = path[0] + offset;
-            enemy.SetPath(path, offset);
+            DestroyEnemy(enemy);
         }
 
         public void SpawnTower(TowerId id, Vector3 position)
@@ -85,6 +84,18 @@ namespace Assets.Scripts
 
             var levels = GetLevels();
             LoadLevel(levels.First());
+        }
+
+        private void SpawnEnemy(EnemyId id, IList<Vector3> path)
+        {
+            var prefab = _enemyPrefabs[id];
+            var obj = Instantiate(prefab);
+            var enemy = obj.GetComponent<Enemy>();
+            obj.transform.parent = EnemiyContainer.transform;
+            var offset = Random.insideUnitSphere * MaxSpawnOffset;
+            offset.y = 0f;
+            enemy.Position = path[0] + offset;
+            enemy.SetPath(path, offset);
         }
 
         private void DestroyEnemy(Enemy enemy)
