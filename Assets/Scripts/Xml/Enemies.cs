@@ -5,8 +5,7 @@ namespace Assets.Scripts.Xml
     [Serializable]
     public class Enemies
     {
-        public EnemyInfo SmallWalker { get; set; }
-
-        public EnemyInfo BigWalker { get; set; }
+        [System.Xml.Serialization.XmlElement("Enemy", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public EnemyInfo[] Enemy { get; set; }
     }
 }

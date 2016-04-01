@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <Enemies xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SmallWalker>
+  <Enemy>
+    <Id>SmallWalker</Id>
+    <Name>Small Walker</Name>
     <Speed>10</Speed>
     <Health>8</Health>
     <Size>0.75</Size>
     <Animator>small walker renderer</Animator>
-  </SmallWalker>
-  <BigWalker>
+  </Enemy>
+  <Enemy>
+    <Id>BigWalker</Id>
+    <Name>Big Walker</Name>
     <Speed>4</Speed>
     <Health>15</Health>
     <Size>1</Size>
     <Animator>small walker renderer</Animator>
-  </BigWalker>
+  </Enemy>
 </Enemies>

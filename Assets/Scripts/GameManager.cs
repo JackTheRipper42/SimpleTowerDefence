@@ -174,8 +174,7 @@ namespace Assets.Scripts
             {
                 var serializer = new XmlSerializer(typeof(Enemies));
                 var enemies = (Enemies) serializer.Deserialize(stream);
-                yield return enemies.SmallWalker;
-                yield return enemies.BigWalker;
+                return enemies.Enemy;
             }
         }
 
