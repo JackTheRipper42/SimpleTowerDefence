@@ -23,7 +23,6 @@ namespace Assets.Scripts
         public Canvas Canvas;
         public RuntimeAnimatorController[] AnimatorControllers;
         public GameObject EnemyPrefab;
-        public GameObject[] Enemies;
         public GameObject[] Towers;
         [Range(0f, 2f)] public float MaxSpawnOffset = 1f;
 
