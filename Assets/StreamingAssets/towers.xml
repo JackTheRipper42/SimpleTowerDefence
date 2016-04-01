@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<Enemies xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <DirectFireTower>
+    <Id>Cannon</Id>
+    <Name>Cannon</Name>
+    <Range>5</Range>
+    <FireRate>2</FireRate>
+    <Damage>0.3</Damage>
+  </DirectFireTower>
+  <DirectFireTower>
+    <Id>Gattling</Id>
+    <Name>Gattling</Name>
+    <Range>3</Range>
+    <FireRate>5</FireRate>
+    <Damage>0.1</Damage>
+  </DirectFireTower>
+  <DirectFireTower>
+    <Id>Railgun</Id>
+    <Name>Railgun</Name>
+    <Range>10</Range>
+    <FireRate>0.5</FireRate>
+    <Damage>3</Damage>
+  </DirectFireTower>
+  <AreaOfEffectTower>
+    <Id>Missile</Id>
+    <Name>Missile</Name>
+    <Range>5</Range>
+    <FireRate>0.5</FireRate>
+    <AreaDamage>3</AreaDamage>
+    <DamageRange>0.75</DamageRange>
+  </AreaOfEffectTower>
+</Enemies>
