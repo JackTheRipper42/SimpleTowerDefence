@@ -6,7 +6,7 @@
     <Speed>10</Speed>
     <Health>8</Health>
     <Size>0.75</Size>
-    <Animator>small walker renderer</Animator>
+    <AnimationController>small walker renderer</AnimationController>
   </Enemy>
   <Enemy>
     <Id>BigWalker</Id>
@@ -14,6 +14,6 @@
     <Speed>4</Speed>
     <Health>15</Health>
     <Size>1</Size>
-    <Animator>small walker renderer</Animator>
+    <AnimationController>small walker renderer</AnimationController>
   </Enemy>
 </Enemies>

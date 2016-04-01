@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Binding;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Xml;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -10,9 +11,6 @@ namespace Assets.Scripts
         public readonly NotifyingObject<float> HealthProperty;
         public readonly NotifyingObject<Vector3> PositionProperty; 
 
-        public EnemyId Id;
-        public float Speed = 10;
-        public float MaxHealth = 10;
         public Transform RendererTransform;
 
         private float _lerpLength;
@@ -27,6 +25,7 @@ namespace Assets.Scripts
         {
             HealthProperty = new NotifyingObject<float>();
             PositionProperty = new NotifyingObject<Vector3>();
+            _state = State.Undefinded;
         }
 
         public bool Alive
@@ -50,17 +49,27 @@ namespace Assets.Scripts
             }
         }
 
-        public void SetPath(IEnumerable<Vector3> path, Vector3 offset)
+        public EnemyId Id { get; private set; }
+
+        public float Speed { get; private set; }
+
+        public float MaxHealth { get; private set; }
+
+        public void Initialize(
+            EnemyInfo enemyInfo,
+            RuntimeAnimatorController animatorController,
+            IEnumerable<Vector3> path, 
+            Vector3 offset)
         {
+            Id = enemyInfo.Id;
+            Speed = enemyInfo.Speed;
+            MaxHealth = enemyInfo.Health;
+            RendererTransform.localScale = new Vector3(enemyInfo.Size, enemyInfo.Size, enemyInfo.Size);
+            var animator = RendererTransform.GetComponent<Animator>();
+            animator.runtimeAnimatorController = animatorController;
             _path = path.ToArray();
             _offset = offset;
             InitState();
-        }
-
-        public void ResetPath()
-        {
-            _path = null;
-            _state = State.Undefinded;
         }
 
         public void SetHit(float damage)

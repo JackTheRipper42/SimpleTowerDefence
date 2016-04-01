@@ -222,9 +222,12 @@ MonoBehaviour:
   TowerContainer: {fileID: 439244}
   EnemyContainer: {fileID: 417978}
   Canvas: {fileID: 22300470}
+  AnimatorControllers:
+  - {fileID: 9100000, guid: 92911eed474559849a28d9b5cff07abb, type: 2}
+  EnemyPrefab: {fileID: 114376, guid: cda527f37cd5de949b349766f2c877cb, type: 2}
   Enemies:
   - {fileID: 114376, guid: cda527f37cd5de949b349766f2c877cb, type: 2}
-  - {fileID: 190920, guid: cd48dc6c12aaca84390938eaff139878, type: 2}
+  - {fileID: 0}
   Towers:
   - {fileID: 166550, guid: e90ff404e3a023948a6c49c568f55a1b, type: 2}
   - {fileID: 119912, guid: 9826920f8dc521043a178ca8ebb8a410, type: 2}

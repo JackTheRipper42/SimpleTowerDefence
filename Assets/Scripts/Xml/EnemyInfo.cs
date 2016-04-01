@@ -15,6 +15,6 @@ namespace Assets.Scripts.Xml
 
         public float Size { get; set; }
 
-        public string Animator { get; set; }
+        public string AnimationController { get; set; }
     }
 }

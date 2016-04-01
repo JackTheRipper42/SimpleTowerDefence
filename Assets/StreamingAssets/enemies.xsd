@@ -13,7 +13,7 @@
       <xs:element name="Speed" type="xs:float" minOccurs="1" maxOccurs="1"/>
       <xs:element name="Health" type="xs:float" minOccurs="1" maxOccurs="1"/>
       <xs:element name="Size" type="xs:float" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="Animator" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AnimationController" type="xs:string" minOccurs="1" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Enemies">

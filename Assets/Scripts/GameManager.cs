@@ -21,11 +21,14 @@ namespace Assets.Scripts
         public Transform TowerContainer;
         public Transform EnemyContainer;
         public Canvas Canvas;
+        public RuntimeAnimatorController[] AnimatorControllers;
+        public GameObject EnemyPrefab;
         public GameObject[] Enemies;
         public GameObject[] Towers;
         [Range(0f, 2f)] public float MaxSpawnOffset = 1f;
 
-        private IDictionary<EnemyId, GameObject> _enemyPrefabs;
+        private IDictionary<string, RuntimeAnimatorController> _animatorControllers;
+        private IDictionary<EnemyId, EnemyInfo> _enemyInfos; 
         private IDictionary<TowerId, GameObject> _towerPrefabs;
 
         private HashSet<Vector3> _towerPositions;
@@ -99,14 +102,15 @@ namespace Assets.Scripts
         protected virtual void Start()
         {
             _towerPositions = new HashSet<Vector3>();
-            _enemyPrefabs = Enemies.ToDictionary(
-                enemy => enemy.GetComponent<Enemy>().Id,
+            _animatorControllers = AnimatorControllers.ToDictionary(
+                controller => controller.name,
+                controller => controller);
+            _enemyInfos = GetEnemies().ToDictionary(
+                enemy => enemy.Id,
                 enemy => enemy);
             _towerPrefabs = Towers.ToDictionary(
                 tower => tower.GetComponent<Tower>().Id,
                 tower => tower);
-
-            var enemies = GetEnemies().ToList();
 
             var levels = GetLevels();
             LoadLevel(levels.First());
@@ -124,14 +128,19 @@ namespace Assets.Scripts
 
         private void SpawnEnemy(EnemyId id, IList<Vector3> path)
         {
-            var prefab = _enemyPrefabs[id];
-            var obj = Instantiate(prefab);
+            var obj = Instantiate(EnemyPrefab);
             var enemy = obj.GetComponent<Enemy>();
             obj.transform.parent = EnemyContainer.transform;
             var offset = Random.insideUnitSphere * MaxSpawnOffset;
             offset.y = 0f;
             enemy.Position = path[0] + offset;
-            enemy.SetPath(path, offset);
+            var enemyInfo = _enemyInfos[id];
+            var animationController = _animatorControllers[enemyInfo.AnimationController];
+            enemy.Initialize(
+                enemyInfo,
+                animationController,
+                path,
+                offset);
         }
 
         private void DestroyEnemy(Enemy enemy)
