@@ -158,11 +158,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5145115e03bdc2e46a806c8ee22dbafe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BaseTransform: {fileID: 466486}
   TowerTransform: {fileID: 430522}
-  Id: 0
-  Range: 5
-  FireRate: 2
-  Damage: 0.3
 --- !u!120 &12035506
 LineRenderer:
   m_ObjectHideFlags: 1
