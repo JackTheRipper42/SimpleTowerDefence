@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="Windows-1252"?>
-<Enemies xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<Towers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <DirectFireTower>
     <Id>Cannon</Id>
     <Name>Cannon</Name>
@@ -29,4 +29,12 @@
     <AreaDamage>3</AreaDamage>
     <DamageRange>0.75</DamageRange>
   </AreaOfEffectTower>
-</Enemies>
+  <AreaOfEffectTower>
+    <Id>MRLS</Id>
+    <Name>MRLS</Name>
+    <Range>5</Range>
+    <FireRate>2</FireRate>
+    <AreaDamage>2</AreaDamage>
+    <DamageRange>10</DamageRange>
+  </AreaOfEffectTower>
+</Towers>

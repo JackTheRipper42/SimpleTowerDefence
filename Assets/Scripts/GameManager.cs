@@ -112,6 +112,8 @@ namespace Assets.Scripts
                 tower => tower.GetComponent<Tower>().Id,
                 tower => tower);
 
+            var towers = GetTowers();
+
             var levels = GetLevels();
             LoadLevel(levels.First());
         }
@@ -185,6 +187,23 @@ namespace Assets.Scripts
                 var enemies = (Enemies) serializer.Deserialize(stream);
                 return enemies.Enemy;
             }
+        }
+
+        private static IEnumerable<TowerInfo> GetTowers()
+        {
+            var xmlPath = System.IO.Path.Combine(Application.streamingAssetsPath, "towers.xml");
+            var xsdPath = System.IO.Path.Combine(Application.streamingAssetsPath, "towers.xsd");
+            ValidateXmlDocument(xmlPath, xsdPath);
+
+            var allTowers = new List<TowerInfo>();
+            using (var stream = new FileStream(xmlPath, FileMode.Open, FileAccess.Read))
+            {
+                var serializer = new XmlSerializer(typeof(Towers));
+                var towers = (Towers) serializer.Deserialize(stream);
+                allTowers.AddRange(towers.AreaOfEffectTower);
+                allTowers.AddRange(towers.DirectFireTower);
+            }
+            return allTowers;
         }
 
         private static void ValidateXmlDocument(string xmlPath, string xsdPath)

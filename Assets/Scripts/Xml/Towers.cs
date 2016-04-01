@@ -8,9 +8,9 @@ namespace Assets.Scripts.Xml
     public class Towers
     {
         [XmlElement("DirectFireTower", Form = XmlSchemaForm.Unqualified)]
-        public DirectFireTower[] DirectFireTower { get; set; }
+        public DirectFireTowerInfo[] DirectFireTower { get; set; }
 
         [XmlElement("AreaOfEffectTower", Form = XmlSchemaForm.Unqualified)]
-        public AreaOfEffectTower[] AreaOfEffectTower { get; set; }
+        public AreaofEffectTowerInfo[] AreaOfEffectTower { get; set; }
     }
 }

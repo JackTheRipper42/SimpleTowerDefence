@@ -45,7 +45,7 @@ GameObject:
   - 135: {fileID: 13529800}
   - 114: {fileID: 11489124}
   m_Layer: 0
-  m_Name: Cannon
+  m_Name: DirectFireTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -27,11 +27,15 @@
     </xs:complexContent>
   </xs:complexType>
   <xs:complexType name ="AreaOfEffectTowerInfoType">
-    <xs:sequence>
-      <xs:element name="FireRate" type="xs:float" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="AreaDamage" type="xs:float" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="DamageRange" type="xs:float" minOccurs="1" maxOccurs="1"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="TowerInfoType">
+        <xs:sequence>
+          <xs:element name="FireRate" type="xs:float" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="AreaDamage" type="xs:float" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="DamageRange" type="xs:float" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
   <xs:element name="Towers">
     <xs:complexType>
