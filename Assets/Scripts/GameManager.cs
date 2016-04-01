@@ -18,7 +18,7 @@ namespace Assets.Scripts
     public class GameManager : MonoBehaviour
     {
         public Transform TowerContainer;
-        public Transform EnemiyContainer;
+        public Transform EnemyContainer;
         public Canvas Canvas;
         public GameObject[] Enemies;
         public GameObject[] Towers;
@@ -26,7 +26,9 @@ namespace Assets.Scripts
 
         private IDictionary<EnemyId, GameObject> _enemyPrefabs;
         private IDictionary<TowerId, GameObject> _towerPrefabs;
+
         private HashSet<Vector3> _towerPositions;
+        private Level _level;
         
         public void EnemyExits([NotNull] Enemy enemy)
         {
@@ -72,6 +74,22 @@ namespace Assets.Scripts
             return Time.deltaTime;
         }
 
+        public void LoadLevel(Level level)
+        {
+            _level = level;
+            StartCoroutine(LoadLevelCoroutine(level));
+        }
+
+        public void UnloadLevel()
+        {
+            StopAllCoroutines();
+            DestroyChildren(EnemyContainer);
+            DestroyChildren(TowerContainer);
+            SceneManager.UnloadScene(_level.SceneName);
+            _towerPositions.Clear();
+            _level = null;
+        }
+
         protected virtual void Start()
         {
             _towerPositions = new HashSet<Vector3>();
@@ -86,12 +104,22 @@ namespace Assets.Scripts
             LoadLevel(levels.First());
         }
 
+        private static void DestroyChildren(Transform container)
+        {
+            var count = container.childCount;
+            for (var index = 0; index < count; index++)
+            {
+                var child = container.GetChild(index);
+                Destroy(child.gameObject);
+            }
+        }
+
         private void SpawnEnemy(EnemyId id, IList<Vector3> path)
         {
             var prefab = _enemyPrefabs[id];
             var obj = Instantiate(prefab);
             var enemy = obj.GetComponent<Enemy>();
-            obj.transform.parent = EnemiyContainer.transform;
+            obj.transform.parent = EnemyContainer.transform;
             var offset = Random.insideUnitSphere * MaxSpawnOffset;
             offset.y = 0f;
             enemy.Position = path[0] + offset;
@@ -139,11 +167,6 @@ namespace Assets.Scripts
             }
 
             return levels;
-        }
-
-        private void LoadLevel(Level level)
-        {
-            StartCoroutine(LoadLevelCoroutine(level));
         }
 
         private IEnumerator LoadLevelCoroutine(Level level)
