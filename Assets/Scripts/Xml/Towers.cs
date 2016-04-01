@@ -11,6 +11,6 @@ namespace Assets.Scripts.Xml
         public DirectFireTowerInfo[] DirectFireTower { get; set; }
 
         [XmlElement("AreaOfEffectTower", Form = XmlSchemaForm.Unqualified)]
-        public AreaofEffectTowerInfo[] AreaOfEffectTower { get; set; }
+        public AreaOfEffectTowerInfo[] AreaOfEffectTower { get; set; }
     }
 }

@@ -10,5 +10,9 @@ namespace Assets.Scripts.Xml
         public float Range { get; set; }
 
         public float FireRate { get; set; }
+
+        public string BaseSprite { get; set; }
+
+        public string TowerSprite { get; set; }
     }
 }

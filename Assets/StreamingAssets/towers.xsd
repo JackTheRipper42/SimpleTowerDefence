@@ -14,13 +14,15 @@
       <xs:element name="Id" type="TowerId" minOccurs="1" maxOccurs="1"/>
       <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1"/>
       <xs:element name="Range" type="xs:float" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="FireRate" type="xs:float" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="BaseSprite" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="TowerSprite" type="xs:string" minOccurs="1" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name ="DirectFireTowerInfoType">
     <xs:complexContent>
       <xs:extension base="TowerInfoType">
         <xs:sequence>
-          <xs:element name="FireRate" type="xs:float" minOccurs="1" maxOccurs="1"/>
           <xs:element name="Damage" type="xs:float" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
@@ -30,7 +32,6 @@
     <xs:complexContent>
       <xs:extension base="TowerInfoType">
         <xs:sequence>
-          <xs:element name="FireRate" type="xs:float" minOccurs="1" maxOccurs="1"/>
           <xs:element name="AreaDamage" type="xs:float" minOccurs="1" maxOccurs="1"/>
           <xs:element name="DamageRange" type="xs:float" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>

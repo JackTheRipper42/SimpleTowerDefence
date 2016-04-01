@@ -1,29 +1,58 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts.Xml;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
     [RequireComponent(typeof(SphereCollider))]
     [RequireComponent(typeof(Rigidbody))]
-    public abstract class Tower : MonoBehaviour
+    public abstract class Tower<TInfo> : MonoBehaviour
+        where TInfo: TowerInfo
     {
+        public Transform BaseTransform;
         public Transform TowerTransform;
-        public TowerId Id;
-        public float Range = 5f;       
-        public float FireRate = 2f;
 
         private List<Enemy> _availableTargets;
         private Enemy _target;
         private float _lastShot;
         private GameManager _gameManager;
+        private State _state;
+
+        public TowerId Id { get; private set; }
+        public float Range { get; private set; }
+        public float FireRate { get; private set; }
+
+        protected Tower()
+        {
+            _state = State.Undefined;
+        }
+
+        public virtual void Initialize(TInfo towerInfo, Sprite baseSprite, Sprite towerSprite)
+        {
+            Id = towerInfo.Id;
+            Range = towerInfo.Range;
+            FireRate = towerInfo.FireRate;
+
+            var sphereCollider = GetComponent<SphereCollider>();
+            sphereCollider.radius = Range;
+
+            var baseSpriteRenderer = BaseTransform.GetComponent<SpriteRenderer>();
+            baseSpriteRenderer.sprite = baseSprite;
+
+            var towerSpriteRenderer = TowerTransform.GetComponent<SpriteRenderer>();
+            towerSpriteRenderer.sprite = towerSprite;
+
+            var rangeRenderer = GetComponentInChildren<RangeRenderer>();
+            rangeRenderer.Initialize(Range);
+
+            _state = State.Initialized;
+        }
 
         protected virtual void Start()
         {
             _availableTargets = new List<Enemy>();
             _target = null;
             _lastShot = 0;
-            var sphereCollider = GetComponent<SphereCollider>();
-            sphereCollider.radius = Range;
             _gameManager = GetComponentInParent<GameManager>();
         }
 
@@ -31,6 +60,11 @@ namespace Assets.Scripts
 
         protected virtual void Update()
         {
+            if (_state == State.Undefined)
+            {
+                return;
+            }
+
             _availableTargets.RemoveAll(target => target == null || !target.Alive);
 
             if (_target != null && !_target.Alive)
@@ -85,6 +119,12 @@ namespace Assets.Scripts
                     _target = null;
                 }
             }
+        }
+
+        private enum State
+        {
+            Undefined,
+            Initialized
         }
     }
 }

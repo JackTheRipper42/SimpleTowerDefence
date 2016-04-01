@@ -224,16 +224,34 @@ MonoBehaviour:
   Canvas: {fileID: 22300470}
   AnimatorControllers:
   - {fileID: 9100000, guid: 92911eed474559849a28d9b5cff07abb, type: 2}
+  Sprites:
+  - {fileID: 21300000, guid: 11843b7c9bd75b54b9d832b4be95fe19, type: 3}
+  - {fileID: 21300000, guid: f06c4efb3d4bee048a01b3932f16d6d3, type: 3}
+  - {fileID: 21300000, guid: db1adefe5656e0840a97428e70e32fd8, type: 3}
+  - {fileID: 21300000, guid: d52c32bcb3ebe194ea0a17dd10648066, type: 3}
+  - {fileID: 21300000, guid: 34dee63723630bf438a1edcf42d9cae6, type: 3}
+  - {fileID: 21300000, guid: 04f84b857faff494abf0c82dc29beaec, type: 3}
+  - {fileID: 21300000, guid: 9fdaae22cb547514784d05e0adb67d6a, type: 3}
+  - {fileID: 21300000, guid: b494bc820b6a22b4bbed3c022d0ddd89, type: 3}
+  - {fileID: 21300000, guid: c0bd1608fb521f6418ff95e5db55938a, type: 3}
+  - {fileID: 21300000, guid: 8a60e8a2662890d4295cd161c31b8475, type: 3}
+  - {fileID: 21300000, guid: bd5f6842970b781488f1367e15acca18, type: 3}
+  - {fileID: 21300000, guid: 458b3c447d8adab499bac8cd76eea286, type: 3}
+  - {fileID: 21300000, guid: 0c4612036685e0b40a8eac0ea24103b6, type: 3}
+  - {fileID: 21300000, guid: 782fd479296c2ae43b3d8b36e4dec938, type: 3}
+  - {fileID: 21300000, guid: d490cb55bb1574247a9a39df73305a49, type: 3}
+  - {fileID: 21300000, guid: bd026f8363b3a18469339b4be105b742, type: 3}
+  - {fileID: 21300000, guid: d3509a1a397dd04479dc83d4ec32383e, type: 3}
+  - {fileID: 21300000, guid: e13c172d023325d4d9c7d5083c34c966, type: 3}
+  - {fileID: 21300000, guid: 8962ad0a1c05e094d80fbf766d7afadf, type: 3}
+  - {fileID: 21300000, guid: f59ebb270b413534eac19eba251308e2, type: 3}
+  - {fileID: 21300000, guid: 55fafb6a804f94249ac871057aaa4ab5, type: 3}
+  - {fileID: 21300000, guid: cd203cbde2b2cd044be2c23e30b6dbd0, type: 3}
   EnemyPrefab: {fileID: 114376, guid: cda527f37cd5de949b349766f2c877cb, type: 2}
-  Enemies:
-  - {fileID: 114376, guid: cda527f37cd5de949b349766f2c877cb, type: 2}
-  - {fileID: 0}
-  Towers:
-  - {fileID: 166550, guid: e90ff404e3a023948a6c49c568f55a1b, type: 2}
-  - {fileID: 119912, guid: 9826920f8dc521043a178ca8ebb8a410, type: 2}
-  - {fileID: 170732, guid: 034e768bd42fef849acd586191446636, type: 2}
-  - {fileID: 116828, guid: 371cb08264c96de44b478ace6ad39f37, type: 2}
-  - {fileID: 152556, guid: 153221fe56cbd3b4cb41c54b0c92ba28, type: 2}
+  DirectFireTowerPrefab: {fileID: 166550, guid: e90ff404e3a023948a6c49c568f55a1b,
+    type: 2}
+  AreaOfEffectTowerPrefab: {fileID: 170732, guid: 034e768bd42fef849acd586191446636,
+    type: 2}
   MaxSpawnOffset: 0.654
 --- !u!114 &11495570
 MonoBehaviour:

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Xml;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -9,11 +10,8 @@ namespace Assets.Scripts
         public int Points = 50;
         public float Width = 1f;
       
-        protected virtual void Start()
+        public void Initialize(float radius)
         {
-            var tower = GetComponentInParent<Tower>();
-            var radius = tower.Range;
-
             var lineRenderer = GetComponent<LineRenderer>();
             var points = new Vector3[Points + 1];
             for (var i = 0; i < Points; i++)

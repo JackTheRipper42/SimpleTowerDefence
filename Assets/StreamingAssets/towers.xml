@@ -5,6 +5,8 @@
     <Name>Cannon</Name>
     <Range>5</Range>
     <FireRate>2</FireRate>
+    <BaseSprite>turret-base</BaseSprite>
+    <TowerSprite>turret-1-1</TowerSprite>
     <Damage>0.3</Damage>
   </DirectFireTower>
   <DirectFireTower>
@@ -12,6 +14,8 @@
     <Name>Gattling</Name>
     <Range>3</Range>
     <FireRate>5</FireRate>
+    <BaseSprite>turret-base</BaseSprite>
+    <TowerSprite>turret-5-1</TowerSprite>
     <Damage>0.1</Damage>
   </DirectFireTower>
   <DirectFireTower>
@@ -19,6 +23,8 @@
     <Name>Railgun</Name>
     <Range>10</Range>
     <FireRate>0.5</FireRate>
+    <BaseSprite>turret-base</BaseSprite>
+    <TowerSprite>turret-7-1</TowerSprite>
     <Damage>3</Damage>
   </DirectFireTower>
   <AreaOfEffectTower>
@@ -26,6 +32,8 @@
     <Name>Missile</Name>
     <Range>5</Range>
     <FireRate>0.5</FireRate>
+    <BaseSprite>turret-base</BaseSprite>
+    <TowerSprite>turret-3-1</TowerSprite>
     <AreaDamage>3</AreaDamage>
     <DamageRange>0.75</DamageRange>
   </AreaOfEffectTower>
@@ -34,6 +42,8 @@
     <Name>MRLS</Name>
     <Range>5</Range>
     <FireRate>2</FireRate>
+    <BaseSprite>turret-base</BaseSprite>
+    <TowerSprite>turret-4-1</TowerSprite>
     <AreaDamage>2</AreaDamage>
     <DamageRange>10</DamageRange>
   </AreaOfEffectTower>

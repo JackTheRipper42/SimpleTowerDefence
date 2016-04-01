@@ -1,15 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Xml;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class AreaOfEffectTower : Tower
+    public class AreaOfEffectTower : Tower<AreaOfEffectTowerInfo>
     {
         public LayerMask EnemyLayerMask;
-        public float AreaDamage = 0.1f;
-        public float DamageRange = 2f;
-        
+
+        public float AreaDamage { get; private set; }
+        public float DamageRange { get; private set; }
+
+        public override void Initialize(AreaOfEffectTowerInfo areaOfEffectTowerInfo, Sprite baseSprite, Sprite towerSprite)
+        {
+            AreaDamage = areaOfEffectTowerInfo.AreaDamage;
+            DamageRange = areaOfEffectTowerInfo.DamageRange;
+            base.Initialize(areaOfEffectTowerInfo, baseSprite, towerSprite);
+        }
+
         protected override void Fire(Enemy target)
         {
             var hitPosition = target.transform.position;
