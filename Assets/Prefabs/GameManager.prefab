@@ -220,10 +220,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TowerContainer: {fileID: 439244}
-  EnemiyContainer: {fileID: 417978}
+  EnemyContainer: {fileID: 417978}
   Canvas: {fileID: 22300470}
-  Maps:
-  - {fileID: 173092, guid: 364280444361ced41a018e16e1019a93, type: 2}
   Enemies:
   - {fileID: 114376, guid: cda527f37cd5de949b349766f2c877cb, type: 2}
   - {fileID: 190920, guid: cd48dc6c12aaca84390938eaff139878, type: 2}
