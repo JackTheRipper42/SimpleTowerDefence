@@ -82,6 +82,11 @@ namespace Assets.Scripts
 
         public void UnloadLevel()
         {
+            if (_level == null)
+            {
+                return;
+            }
+
             StopAllCoroutines();
             DestroyChildren(EnemyContainer);
             DestroyChildren(TowerContainer);
