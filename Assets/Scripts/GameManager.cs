@@ -84,7 +84,7 @@ namespace Assets.Scripts
                 tower => tower);
 
             var levels = GetLevels();
-            StartCoroutine(LoadLevel(levels.First()));
+            LoadLevel(levels.First());
         }
 
         private void DestroyEnemy(Enemy enemy)
@@ -130,16 +130,21 @@ namespace Assets.Scripts
             return levels;
         }
 
-        private IEnumerator LoadLevel(Level level)
+        private void LoadLevel(Level level)
         {
-            SceneManager.LoadScene(level.SceneName, LoadSceneMode.Additive);
-            var scene = new Scene();
-            while (!scene.isLoaded)
+            StartCoroutine(LoadLevelCoroutine(level));
+        }
+
+        private IEnumerator LoadLevelCoroutine(Level level)
+        {
+            var asyncOperation = SceneManager.LoadSceneAsync(level.SceneName, LoadSceneMode.Additive);
+
+            while (!asyncOperation.isDone)
             {
                 yield return new WaitForEndOfFrame();
-                scene = SceneManager.GetSceneByName(level.SceneName);
             }
 
+            var scene = SceneManager.GetSceneByName(level.SceneName);
             var rootGameObject = scene.GetRootGameObjects();
             var paths = rootGameObject.SelectMany(obj => obj.GetComponentsInChildren<Path>());
 
