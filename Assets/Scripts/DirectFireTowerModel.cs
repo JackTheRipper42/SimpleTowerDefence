@@ -2,30 +2,17 @@
 
 namespace Assets.Scripts
 {
-    public class DirectFireTowerModel : TowerModel
+    public class DirectFireTowerModel : TowerModel<DirectFireTowerLevel>
     {
-        private readonly float _damage;
-
         public DirectFireTowerModel(
             TowerId id,
-            float range,
-            float fireRate,
-            float damage,
             Sprite baseSprite,
-            Sprite towerSprite)
+            DirectFireTowerLevel[] levels)
             : base(
                 id,
-                range,
-                fireRate,
                 baseSprite,
-                towerSprite)
+                levels)
         {
-            _damage = damage;
-        }
-
-        public float Damage
-        {
-            get { return _damage; }
         }
     }
 }

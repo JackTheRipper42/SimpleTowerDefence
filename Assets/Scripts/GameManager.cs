@@ -30,11 +30,11 @@ namespace Assets.Scripts
 
         private IDictionary<string, RuntimeAnimatorController> _animatorControllers;
         private IDictionary<EnemyId, EnemyInfo> _enemyInfos;
-        private IDictionary<TowerId, TowerModel> _towerModels;
-        private HashSet<Enemy> _enemies; 
+        private IDictionary<TowerId, ITowerModel> _towerModels;
+        private HashSet<Enemy> _enemies;
         private HashSet<Vector3> _towerPositions;
         private Level _level;
-        
+
         public void EnemyExits([NotNull] Enemy enemy)
         {
             if (enemy == null)
@@ -63,12 +63,14 @@ namespace Assets.Scripts
             if (modelType == typeof(DirectFireTowerModel))
             {
                 obj = Instantiate(DirectFireTowerPrefab);
-                InitializeTower<DirectFireTowerModel, DirectFireTower>(obj, (DirectFireTowerModel) model);
+                var tower = obj.GetComponent<DirectFireTower>();
+                tower.Initialize((DirectFireTowerModel) model);
             }
             else if (modelType == typeof(AreaOfEffectTowerModel))
             {
                 obj = Instantiate(AreaOfEffectTowerPrefab);
-                InitializeTower<AreaOfEffectTowerModel, AreaOfEffectTower>(obj, (AreaOfEffectTowerModel) model);
+                var tower = obj.GetComponent<AreaOfEffectTower>();
+                tower.Initialize((AreaOfEffectTowerModel) model);
             }
             else
             {
@@ -126,7 +128,7 @@ namespace Assets.Scripts
             var sprites = Sprites.ToDictionary(
                 sprite => sprite.name,
                 sprite => sprite);
-            
+
             _enemies = new HashSet<Enemy>();
             _towerPositions = new HashSet<Vector3>();
             _animatorControllers = AnimatorControllers.ToDictionary(
@@ -141,14 +143,6 @@ namespace Assets.Scripts
 
             var levels = ParseLevels();
             LoadLevel(levels.First());
-        }
-
-        private static void InitializeTower<TModel, TTower>(GameObject obj, TModel towerInfo)
-            where TModel : TowerModel
-            where TTower : Tower<TModel>
-        {
-            var tower = obj.GetComponent<TTower>();
-            tower.Initialize(towerInfo);
         }
 
         private static void DestroyChildren(Transform container)
@@ -166,7 +160,7 @@ namespace Assets.Scripts
             var obj = Instantiate(EnemyPrefab);
             var enemy = obj.GetComponent<Enemy>();
             obj.transform.parent = EnemyContainer.transform;
-            var offset = Random.insideUnitSphere * MaxSpawnOffset;
+            var offset = Random.insideUnitSphere*MaxSpawnOffset;
             offset.y = 0f;
             enemy.Position = path[0] + offset;
             var enemyInfo = _enemyInfos[id];
@@ -201,7 +195,7 @@ namespace Assets.Scripts
                     using (var stream = new FileStream(levelXml.FullName, FileMode.Open, FileAccess.Read))
                     {
                         var serializer = new XmlSerializer(typeof(LevelInfo));
-                        var levelInfo = (LevelInfo) serializer.Deserialize(stream);                        
+                        var levelInfo = (LevelInfo) serializer.Deserialize(stream);
                         var sceneName = string.Format("Scenes/Maps/{0}", levelInfo.Map);
 
                         yield return new Level(levelInfo.Name, sceneName, levelLua.FullName);
@@ -241,7 +235,7 @@ namespace Assets.Scripts
             return allTowers;
         }
 
-        private static TowerModel ParserTowerInfo(TowerInfo info, IDictionary<string, Sprite> sprites)
+        private static ITowerModel ParserTowerInfo(TowerInfo info, IDictionary<string, Sprite> sprites)
         {
             var infoType = info.GetType();
             if (infoType == typeof(DirectFireTowerInfo))
@@ -249,27 +243,49 @@ namespace Assets.Scripts
                 var directFireTowerInfo = (DirectFireTowerInfo) info;
                 return new DirectFireTowerModel(
                     directFireTowerInfo.Id,
-                    directFireTowerInfo.Level1.Range,
-                    directFireTowerInfo.Level1.FireRate,
-                    directFireTowerInfo.Level1.Damage,
                     sprites[directFireTowerInfo.BaseSprite],
-                    sprites[directFireTowerInfo.Level1.TowerSprite]);
+                    new[]
+                    {
+                        ParseTowerLevel(directFireTowerInfo.Level1, sprites),
+                        ParseTowerLevel(directFireTowerInfo.Level2, sprites),
+                        ParseTowerLevel(directFireTowerInfo.Level3, sprites),
+                    });
             }
             if (infoType == typeof(AreaOfEffectTowerInfo))
             {
                 var areaOfEffectTowerInfo = (AreaOfEffectTowerInfo) info;
                 return new AreaOfEffectTowerModel(
                     areaOfEffectTowerInfo.Id,
-                    areaOfEffectTowerInfo.Level1.Range,
-                    areaOfEffectTowerInfo.Level1.FireRate,
-                    areaOfEffectTowerInfo.Level1.AreaDamage,
-                    areaOfEffectTowerInfo.Level1.DamageRange,
                     sprites[areaOfEffectTowerInfo.BaseSprite],
-                    sprites[areaOfEffectTowerInfo.Level1.TowerSprite]);
+                    new[]
+                    {
+                        ParseTowerLevel(areaOfEffectTowerInfo.Level1, sprites),
+                        ParseTowerLevel(areaOfEffectTowerInfo.Level2, sprites),
+                        ParseTowerLevel(areaOfEffectTowerInfo.Level3, sprites)
+                    });
             }
             throw new NotSupportedException(string.Format(
                 "The tower type '{0}' is not supported.",
                 infoType));
+        }
+
+        private static DirectFireTowerLevel ParseTowerLevel(
+            DirectFireTowerLevelInfo info,
+            IDictionary<string, Sprite> sprites)
+        {
+            return new DirectFireTowerLevel(info.Range, info.FireRate, info.Damage, sprites[info.TowerSprite]);
+        }
+
+        private static AreaOfEffectTowerLevel ParseTowerLevel(
+            AreaOfEffectTowerLevelInfo info,
+            IDictionary<string, Sprite> sprites)
+        {
+            return new AreaOfEffectTowerLevel(
+                info.Range,
+                info.FireRate,
+                info.AreaDamage,
+                info.DamageRange,
+                sprites[info.TowerSprite]);
         }
 
         private static void ValidateXmlDocument(string xmlPath, string xsdPath)

@@ -1,13 +1,10 @@
 ﻿namespace Assets.Scripts
 {
-    public class DirectFireTower : Tower<DirectFireTowerModel>
+    public class DirectFireTower : Tower<DirectFireTowerModel, DirectFireTowerLevel>
     {
-        public float Damage { get; private set; }
-
-        public override void Initialize(DirectFireTowerModel model)
+        public float Damage
         {
-            Damage = model.Damage;
-            base.Initialize(model);
+            get { return Model.Levels[Level].Damage; }
         }
 
         protected override void Fire(Enemy target)

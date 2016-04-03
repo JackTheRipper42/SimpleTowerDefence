@@ -2,26 +2,21 @@
 
 namespace Assets.Scripts
 {
-    public class TowerModel
+    public abstract class TowerModel<TLevel> : ITowerModel
+        where TLevel : TowerLevel
     {
         private readonly TowerId _id;
-        private readonly float _range;
-        private readonly float _fireRate;
         private readonly Sprite _baseSprite;
-        private readonly Sprite _towerSprite;
+        private readonly TLevel[] _levels;
 
-        public TowerModel(
+        protected TowerModel(
             TowerId id,
-            float range,
-            float fireRate,
             Sprite baseSprite,
-            Sprite towerSprite)
+            TLevel[] levels)
         {
             _id = id;
-            _range = range;
-            _fireRate = fireRate;
             _baseSprite = baseSprite;
-            _towerSprite = towerSprite;
+            _levels = levels;
         }
 
         public TowerId Id
@@ -29,24 +24,14 @@ namespace Assets.Scripts
             get { return _id; }
         }
 
-        public float Range
-        {
-            get { return _range; }
-        }
-
-        public float FireRate
-        {
-            get { return _fireRate; }
-        }
-
         public Sprite BaseSprite
         {
             get { return _baseSprite; }
         }
 
-        public Sprite TowerSprite
+        public TLevel[] Levels
         {
-            get { return _towerSprite; }
+            get { return _levels; }
         }
     }
 }

@@ -4,18 +4,18 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class AreaOfEffectTower : Tower<AreaOfEffectTowerModel>
+    public class AreaOfEffectTower : Tower<AreaOfEffectTowerModel, AreaOfEffectTowerLevel>
     {
         public LayerMask EnemyLayerMask;
 
-        public float AreaDamage { get; private set; }
-        public float DamageRange { get; private set; }
-
-        public override void Initialize(AreaOfEffectTowerModel model)
+        public float AreaDamage
         {
-            AreaDamage = model.AreaDamage;
-            DamageRange = model.DamageRange;
-            base.Initialize(model);
+            get { return Model.Levels[Level].AreaDamage; }
+        }
+
+        public float DamageRange
+        {
+            get { return Model.Levels[Level].DamageRange; }
         }
 
         protected override void Fire(Enemy target)

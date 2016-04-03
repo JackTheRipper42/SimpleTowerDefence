@@ -1,11 +1,11 @@
-﻿using Assets.Scripts.Xml;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public abstract class Tower<TModel> : MonoBehaviour, ITower
-        where TModel: TowerModel
+    public abstract class Tower<TModel, TLevel> : MonoBehaviour, ITower
+        where TModel: TowerModel<TLevel>
+        where TLevel : TowerLevel
     {
         public Transform BaseTransform;
         public Transform TowerTransform;
@@ -15,26 +15,51 @@ namespace Assets.Scripts
         private GameManager _gameManager;
         private State _state;
 
-        public TowerId Id { get; private set; }
-        public float Range { get; private set; }
-        public float FireRate { get; private set; }
-
         protected Tower()
         {
             _state = State.Undefined;
+            Level = 0;
+        }
+
+        public TowerId Id
+        {
+            get { return Model.Id; }
+        }
+
+        public float Range
+        {
+            get { return Model.Levels[Level].Range; }
+        }
+
+        public float FireRate
+        {
+            get { return Model.Levels[Level].FireRate; }
+        }
+
+        public int Level { get; private set; }
+
+        protected TModel Model { get; private set; }
+
+        public bool CanUpgrade()
+        {
+            return Level < Model.Levels.Length - 1;
+        }
+
+        public void Upgrade()
+        {
+            Level++;
+            Debug.Log(string.Format("upgrade tower {0} to level {1}", gameObject.name, Level));
         }
 
         public virtual void Initialize(TModel model)
         {
-            Id = model.Id;
-            Range = model.Range;
-            FireRate = model.FireRate;
+            Model = model;
 
             var baseSpriteRenderer = BaseTransform.GetComponent<SpriteRenderer>();
             baseSpriteRenderer.sprite = model.BaseSprite;
 
             var towerSpriteRenderer = TowerTransform.GetComponent<SpriteRenderer>();
-            towerSpriteRenderer.sprite = model.TowerSprite;
+            towerSpriteRenderer.sprite = model.Levels[0].TowerSprite;
 
             var rangeRenderer = GetComponentInChildren<RangeRenderer>();
             rangeRenderer.Initialize(Range);
@@ -102,16 +127,6 @@ namespace Assets.Scripts
         {
             Undefined,
             Initialized
-        }
-
-        public bool CanUpgrade()
-        {
-            return true;
-        }
-
-        public void Upgrade()
-        {
-            Debug.Log(string.Format("upgrade tower {0}", gameObject.name));
         }
     }
 }
