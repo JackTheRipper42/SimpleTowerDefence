@@ -29,6 +29,7 @@ namespace Assets.Scripts
 
             _rangeRenderer = GetComponentInChildren<RangeRenderer>();
             _rangeRenderer.VisibleProperty.Bind(BindingType.OneWay, ViewModel.VisibleProperty);
+            _rangeRenderer.RangeProperty.Bind(BindingType.OneWay, ViewModel.RangeProperty);
 
             _towerRendererBinding = tower.TowerTransform.gameObject.GetComponent<SpriteRendererBinding>();
             _towerRendererBinding.SpriteProperty.Bind(BindingType.OneWay, ViewModel.TowerSpriteProperty);
@@ -49,6 +50,7 @@ namespace Assets.Scripts
             if (_rangeRenderer != null)
             {
                 _rangeRenderer.VisibleProperty.ClearBinding();
+                _rangeRenderer.RangeProperty.ClearBinding();
                 _rangeRenderer = null;
             }
             if (_towerRendererBinding != null)

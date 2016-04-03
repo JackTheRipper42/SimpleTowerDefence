@@ -60,9 +60,6 @@ namespace Assets.Scripts
             var baseSpriteRenderer = BaseTransform.GetComponent<SpriteRenderer>();
             baseSpriteRenderer.sprite = model.BaseSprite;
 
-            var rangeRenderer = GetComponentInChildren<RangeRenderer>();
-            rangeRenderer.Initialize(Range);
-
             _state = State.Initialized;
         }
 
