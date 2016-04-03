@@ -1,33 +1,67 @@
 ﻿using Assets.Scripts.Binding;
-using Assets.Scripts.Xml;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-    [RequireComponent(typeof(ITower))]
-    public class TowerView : MonoBehaviour
+    public abstract class TowerView<TTower, TModel, TLevel> : MonoBehaviour
+        where TTower : Tower<TModel, TLevel>
+        where TModel : TowerModel<TLevel>
+        where TLevel : TowerLevel
     {
-        private readonly TowerViewModel _model;
+        protected readonly TowerViewModel ViewModel;
 
-        public TowerView()
+        private TModel _towerModel;
+        private RangeRenderer _rangeRenderer;
+        private SpriteRendererBinding _towerRendererBinding;
+
+        protected TowerView()
         {
-            _model = new TowerViewModel();
+            ViewModel = new TowerViewModel();
         }
 
         protected virtual void Start()
         {
-            var rangeRenderer = GetComponentInChildren<RangeRenderer>();
-            rangeRenderer.VisibleProperty.Bind(BindingType.OneWay, _model.VisibleProperty);
+            var tower = GetComponent<TTower>();
+            _towerModel = tower.Model;
+            _towerModel.LevelProperty.PropertyChanged += LevelOnPropertyChanged;
+
+            ViewModel.OnLevelChange(_towerModel.Levels[_towerModel.LevelProperty.GetValue()]);
+
+            _rangeRenderer = GetComponentInChildren<RangeRenderer>();
+            _rangeRenderer.VisibleProperty.Bind(BindingType.OneWay, ViewModel.VisibleProperty);
+
+            _towerRendererBinding = tower.TowerTransform.gameObject.GetComponent<SpriteRendererBinding>();
+            _towerRendererBinding.SpriteProperty.Bind(BindingType.OneWay, ViewModel.TowerSpriteProperty);
         }
 
         protected virtual void OnMouseEnter()
         {
-            _model.OnMouseEnter();
+            ViewModel.OnMouseEnter();
         }
 
         protected virtual void OnMouseExit()
         {
-            _model.OnMouseExit();
+            ViewModel.OnMouseExit();
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (_rangeRenderer != null)
+            {
+                _rangeRenderer.VisibleProperty.ClearBinding();
+                _rangeRenderer = null;
+            }
+            if (_towerRendererBinding != null)
+            {
+                _towerRendererBinding.SpriteProperty.ClearBinding();
+                _towerRendererBinding = null;
+            }
+        }
+
+        private void LevelOnPropertyChanged(object sender, PropertyChangedEventArgs<int> e)
+        {
+            var level = _towerModel.Levels[e.NewValue];
+            ViewModel.OnLevelChange(level);
         }
     }
 }

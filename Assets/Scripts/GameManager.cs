@@ -28,9 +28,10 @@ namespace Assets.Scripts
         public GameObject AreaOfEffectTowerPrefab;
         [Range(0f, 2f)] public float MaxSpawnOffset = 1f;
 
+        private IDictionary<string, Sprite> _sprites; 
         private IDictionary<string, RuntimeAnimatorController> _animatorControllers;
         private IDictionary<EnemyId, EnemyInfo> _enemyInfos;
-        private IDictionary<TowerId, ITowerModel> _towerModels;
+        private IDictionary<TowerId, TowerInfo> _towerInfos; 
         private HashSet<Enemy> _enemies;
         private HashSet<Vector3> _towerPositions;
         private Level _level;
@@ -57,8 +58,10 @@ namespace Assets.Scripts
 
         public void SpawnTower(TowerId id, Vector3 position)
         {
-            var model = _towerModels[id];
+            var info = _towerInfos[id];
+            var model = ParserTowerInfo(info, _sprites);
             var modelType = model.GetType();
+
             GameObject obj;
             if (modelType == typeof(DirectFireTowerModel))
             {
@@ -125,21 +128,21 @@ namespace Assets.Scripts
 
         protected virtual void Start()
         {
-            var sprites = Sprites.ToDictionary(
-                sprite => sprite.name,
-                sprite => sprite);
-
             _enemies = new HashSet<Enemy>();
             _towerPositions = new HashSet<Vector3>();
+
+            _sprites = Sprites.ToDictionary(
+                sprite => sprite.name,
+                sprite => sprite);
             _animatorControllers = AnimatorControllers.ToDictionary(
                 controller => controller.name,
                 controller => controller);
             _enemyInfos = ParseEnemies().ToDictionary(
                 enemy => enemy.Id,
                 enemy => enemy);
-            _towerModels = ParseTowers().ToDictionary(
+            _towerInfos = ParseTowers().ToDictionary(
                 tower => tower.Id,
-                tower => ParserTowerInfo(tower, sprites));
+                tower => tower);
 
             var levels = ParseLevels();
             LoadLevel(levels.First());

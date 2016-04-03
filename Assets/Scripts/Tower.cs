@@ -18,7 +18,6 @@ namespace Assets.Scripts
         protected Tower()
         {
             _state = State.Undefined;
-            Level = 0;
         }
 
         public TowerId Id
@@ -36,9 +35,13 @@ namespace Assets.Scripts
             get { return Model.Levels[Level].FireRate; }
         }
 
-        public int Level { get; private set; }
+        public int Level
+        {
+            get { return Model.LevelProperty.GetValue(); }
+            private set { Model.LevelProperty.SetValue(value); }
+        }
 
-        protected TModel Model { get; private set; }
+        public TModel Model { get; private set; }
 
         public bool CanUpgrade()
         {
@@ -48,7 +51,6 @@ namespace Assets.Scripts
         public void Upgrade()
         {
             Level++;
-            Debug.Log(string.Format("upgrade tower {0} to level {1}", gameObject.name, Level));
         }
 
         public virtual void Initialize(TModel model)
@@ -57,9 +59,6 @@ namespace Assets.Scripts
 
             var baseSpriteRenderer = BaseTransform.GetComponent<SpriteRenderer>();
             baseSpriteRenderer.sprite = model.BaseSprite;
-
-            var towerSpriteRenderer = TowerTransform.GetComponent<SpriteRenderer>();
-            towerSpriteRenderer.sprite = model.Levels[0].TowerSprite;
 
             var rangeRenderer = GetComponentInChildren<RangeRenderer>();
             rangeRenderer.Initialize(Range);

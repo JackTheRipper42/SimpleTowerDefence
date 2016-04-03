@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Binding;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
     public abstract class TowerModel<TLevel> : ITowerModel
         where TLevel : TowerLevel
     {
+        public readonly NotifyingObject<int> LevelProperty;
+
         private readonly TowerId _id;
         private readonly Sprite _baseSprite;
         private readonly TLevel[] _levels;
@@ -17,6 +20,7 @@ namespace Assets.Scripts
             _id = id;
             _baseSprite = baseSprite;
             _levels = levels;
+            LevelProperty = new NotifyingObject<int>();
         }
 
         public TowerId Id
