@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    [RequireComponent(typeof(Tower<TowerInfo>))]
+    [RequireComponent(typeof(ITower))]
     public class TowerView : MonoBehaviour
     {
         private readonly TowerViewModel _model;

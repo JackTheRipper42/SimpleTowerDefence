@@ -1,16 +1,13 @@
-﻿using Assets.Scripts.Xml;
-using UnityEngine;
-
-namespace Assets.Scripts
+﻿namespace Assets.Scripts
 {
-    public class DirectFireTower : Tower<DirectFireTowerInfo>
+    public class DirectFireTower : Tower<DirectFireTowerModel>
     {
         public float Damage { get; private set; }
 
-        public override void Initialize(DirectFireTowerInfo directFireTowerInfo, Sprite baseSprite, Sprite towerSprite)
+        public override void Initialize(DirectFireTowerModel model)
         {
-            Damage = directFireTowerInfo.Damage;
-            base.Initialize(directFireTowerInfo, baseSprite, towerSprite);
+            Damage = model.Damage;
+            base.Initialize(model);
         }
 
         protected override void Fire(Enemy target)

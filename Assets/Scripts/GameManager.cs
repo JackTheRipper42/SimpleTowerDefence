@@ -29,9 +29,8 @@ namespace Assets.Scripts
         [Range(0f, 2f)] public float MaxSpawnOffset = 1f;
 
         private IDictionary<string, RuntimeAnimatorController> _animatorControllers;
-        private IDictionary<string, Sprite> _sprites; 
         private IDictionary<EnemyId, EnemyInfo> _enemyInfos;
-        private IDictionary<TowerId, TowerInfo> _towerInfos;
+        private IDictionary<TowerId, TowerModel> _towerModels;
         private HashSet<Enemy> _enemies; 
         private HashSet<Vector3> _towerPositions;
         private Level _level;
@@ -58,36 +57,24 @@ namespace Assets.Scripts
 
         public void SpawnTower(TowerId id, Vector3 position)
         {
-            _towerPositions.Add(position);
-            var towerInfo = _towerInfos[id];
-            var baseSprite = _sprites[towerInfo.BaseSprite];
-            var towerSprite = _sprites[towerInfo.TowerSprite];
+            var model = _towerModels[id];
+            var modelType = model.GetType();
             GameObject obj;
-            var infoType = towerInfo.GetType();
-
-            if (infoType == typeof(DirectFireTowerInfo))
+            if (modelType == typeof(DirectFireTowerModel))
             {
                 obj = Instantiate(DirectFireTowerPrefab);
-                InitializeTower<DirectFireTowerInfo, DirectFireTower>(
-                    obj,
-                    (DirectFireTowerInfo) towerInfo,
-                    baseSprite,
-                    towerSprite);
+                InitializeTower<DirectFireTowerModel, DirectFireTower>(obj, (DirectFireTowerModel) model);
             }
-            else if (infoType == typeof(AreaOfEffectTowerInfo))
+            else if (modelType == typeof(AreaOfEffectTowerModel))
             {
                 obj = Instantiate(AreaOfEffectTowerPrefab);
-                InitializeTower<AreaOfEffectTowerInfo, AreaOfEffectTower>(
-                    obj,
-                    (AreaOfEffectTowerInfo) towerInfo,
-                    baseSprite,
-                    towerSprite);
+                InitializeTower<AreaOfEffectTowerModel, AreaOfEffectTower>(obj, (AreaOfEffectTowerModel) model);
             }
             else
             {
                 throw new NotSupportedException(string.Format(
                     "The tower type '{0}' is not supported.",
-                    towerInfo.GetType()));
+                    modelType));
             }
             obj.transform.parent = TowerContainer.transform;
             obj.transform.position = position;
@@ -136,35 +123,32 @@ namespace Assets.Scripts
 
         protected virtual void Start()
         {
+            var sprites = Sprites.ToDictionary(
+                sprite => sprite.name,
+                sprite => sprite);
+            
             _enemies = new HashSet<Enemy>();
             _towerPositions = new HashSet<Vector3>();
             _animatorControllers = AnimatorControllers.ToDictionary(
                 controller => controller.name,
                 controller => controller);
-            _sprites = Sprites.ToDictionary(
-                sprite => sprite.name,
-                sprite => sprite);
             _enemyInfos = ParseEnemies().ToDictionary(
                 enemy => enemy.Id,
                 enemy => enemy);
-            _towerInfos = ParseTowers().ToDictionary(
+            _towerModels = ParseTowers().ToDictionary(
                 tower => tower.Id,
-                tower => tower);
+                tower => ParserTowerInfo(tower, sprites));
 
             var levels = ParseLevels();
             LoadLevel(levels.First());
         }
 
-        private static void InitializeTower<TInfo, TTower>(
-            GameObject obj,
-            TInfo towerInfo,
-            Sprite baseSprite,
-            Sprite towerSprite)
-            where TInfo : TowerInfo
-            where TTower : Tower<TInfo>
+        private static void InitializeTower<TModel, TTower>(GameObject obj, TModel towerInfo)
+            where TModel : TowerModel
+            where TTower : Tower<TModel>
         {
             var tower = obj.GetComponent<TTower>();
-            tower.Initialize(towerInfo, baseSprite, towerSprite);
+            tower.Initialize(towerInfo);
         }
 
         private static void DestroyChildren(Transform container)
@@ -255,6 +239,37 @@ namespace Assets.Scripts
                 allTowers.AddRange(towers.DirectFireTower);
             }
             return allTowers;
+        }
+
+        private static TowerModel ParserTowerInfo(TowerInfo info, IDictionary<string, Sprite> sprites)
+        {
+            var infoType = info.GetType();
+            if (infoType == typeof(DirectFireTowerInfo))
+            {
+                var directFireTowerInfo = (DirectFireTowerInfo) info;
+                return new DirectFireTowerModel(
+                    directFireTowerInfo.Id,
+                    directFireTowerInfo.Level1.Range,
+                    directFireTowerInfo.Level1.FireRate,
+                    directFireTowerInfo.Level1.Damage,
+                    sprites[directFireTowerInfo.BaseSprite],
+                    sprites[directFireTowerInfo.Level1.TowerSprite]);
+            }
+            if (infoType == typeof(AreaOfEffectTowerInfo))
+            {
+                var areaOfEffectTowerInfo = (AreaOfEffectTowerInfo) info;
+                return new AreaOfEffectTowerModel(
+                    areaOfEffectTowerInfo.Id,
+                    areaOfEffectTowerInfo.Level1.Range,
+                    areaOfEffectTowerInfo.Level1.FireRate,
+                    areaOfEffectTowerInfo.Level1.AreaDamage,
+                    areaOfEffectTowerInfo.Level1.DamageRange,
+                    sprites[areaOfEffectTowerInfo.BaseSprite],
+                    sprites[areaOfEffectTowerInfo.Level1.TowerSprite]);
+            }
+            throw new NotSupportedException(string.Format(
+                "The tower type '{0}' is not supported.",
+                infoType));
         }
 
         private static void ValidateXmlDocument(string xmlPath, string xsdPath)

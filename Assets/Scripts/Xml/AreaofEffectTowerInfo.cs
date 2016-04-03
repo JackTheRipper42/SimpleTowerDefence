@@ -5,7 +5,10 @@ namespace Assets.Scripts.Xml
     [Serializable]
     public class AreaOfEffectTowerInfo : TowerInfo
     {
-        public float AreaDamage { get; set; }
-        public float DamageRange { get; set; }
+        public AreaOfEffectTowerLevelInfo Level1 { get; set; }
+
+        public AreaOfEffectTowerLevelInfo Level2 { get; set; }
+
+        public AreaOfEffectTowerLevelInfo Level3 { get; set; }
     }
 }

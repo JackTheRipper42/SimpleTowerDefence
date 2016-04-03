@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public abstract class Tower<TInfo> : MonoBehaviour, ITower
-        where TInfo: TowerInfo
+    public abstract class Tower<TModel> : MonoBehaviour, ITower
+        where TModel: TowerModel
     {
         public Transform BaseTransform;
         public Transform TowerTransform;
@@ -24,17 +24,17 @@ namespace Assets.Scripts
             _state = State.Undefined;
         }
 
-        public virtual void Initialize(TInfo towerInfo, Sprite baseSprite, Sprite towerSprite)
+        public virtual void Initialize(TModel model)
         {
-            Id = towerInfo.Id;
-            Range = towerInfo.Range;
-            FireRate = towerInfo.FireRate;
+            Id = model.Id;
+            Range = model.Range;
+            FireRate = model.FireRate;
 
             var baseSpriteRenderer = BaseTransform.GetComponent<SpriteRenderer>();
-            baseSpriteRenderer.sprite = baseSprite;
+            baseSpriteRenderer.sprite = model.BaseSprite;
 
             var towerSpriteRenderer = TowerTransform.GetComponent<SpriteRenderer>();
-            towerSpriteRenderer.sprite = towerSprite;
+            towerSpriteRenderer.sprite = model.TowerSprite;
 
             var rangeRenderer = GetComponentInChildren<RangeRenderer>();
             rangeRenderer.Initialize(Range);
