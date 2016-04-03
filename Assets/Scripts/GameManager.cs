@@ -20,7 +20,6 @@ namespace Assets.Scripts
     {
         public Transform TowerContainer;
         public Transform EnemyContainer;
-        public Canvas Canvas;
         public RuntimeAnimatorController[] AnimatorControllers;
         public Sprite[] Sprites;
         public GameObject EnemyPrefab;

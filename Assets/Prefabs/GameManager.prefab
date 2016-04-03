@@ -198,9 +198,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97306ac778ac4c24fb7852d3c36bce21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LayerMask:
-    serializedVersion: 2
-    m_Bits: 256
   PrimaryMouseButtonAxis: Fire1
   SecondaryMouseButtonAxis: Fire2
   SelectCannonTypeAxis: Select Cannon Type
@@ -221,7 +218,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TowerContainer: {fileID: 439244}
   EnemyContainer: {fileID: 417978}
-  Canvas: {fileID: 22300470}
   AnimatorControllers:
   - {fileID: 9100000, guid: 92911eed474559849a28d9b5cff07abb, type: 2}
   Sprites:
@@ -252,7 +248,7 @@ MonoBehaviour:
     type: 2}
   AreaOfEffectTowerPrefab: {fileID: 170732, guid: 034e768bd42fef849acd586191446636,
     type: 2}
-  MaxSpawnOffset: 0.654
+  MaxSpawnOffset: 0.678
 --- !u!114 &11495570
 MonoBehaviour:
   m_ObjectHideFlags: 1
