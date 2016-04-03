@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public abstract class Tower<TInfo> : MonoBehaviour
+    public abstract class Tower<TInfo> : MonoBehaviour, ITower
         where TInfo: TowerInfo
     {
         public Transform BaseTransform;
@@ -98,32 +98,20 @@ namespace Assets.Scripts
             return distance <= Range;
         }
 
-        //protected virtual void OnTriggerEnter(Collider other)
-        //{
-        //    var enemy = other.GetComponentInParent<Enemy>();
-        //    if (enemy != null)
-        //    {
-        //        _availableTargets.Add(enemy);
-        //    }
-        //}
-
-        //protected virtual void OnTriggerExit(Collider other)
-        //{
-        //    var enemy = other.GetComponentInParent<Enemy>();
-        //    if (enemy != null)
-        //    {
-        //        _availableTargets.Remove(enemy);
-        //        if (ReferenceEquals(enemy, _target))
-        //        {
-        //            _target = null;
-        //        }
-        //    }
-        //}
-
         private enum State
         {
             Undefined,
             Initialized
+        }
+
+        public bool CanUpgrade()
+        {
+            return true;
+        }
+
+        public void Upgrade()
+        {
+            Debug.Log(string.Format("upgrade tower {0}", gameObject.name));
         }
     }
 }

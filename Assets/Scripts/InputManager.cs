@@ -4,7 +4,6 @@ namespace Assets.Scripts
 {
     public class InputManager : MonoBehaviour
     {
-        public LayerMask LayerMask;
         public string PrimaryMouseButtonAxis = "Fire1";
         public string SecondaryMouseButtonAxis = "Fire2";
         public string SelectCannonTypeAxis = "Select Cannon Type";
@@ -13,53 +12,55 @@ namespace Assets.Scripts
         public string SelectMissileTypeAxis = "Select Missile Type";
         public string SelectMRLSTypeAxis = "Select MRLS Type";
 
-        private TowerId _buildTowerId;
-        private GameManager _gameManager;
-        private Rasterizer _rasterizer;
+        private InputHandler _inputHandler;
+        private PlaceableGroundClickHandler _placeableGroundClickHandler;
 
         protected virtual void Start()
         {
-            _gameManager = GetComponentInParent<GameManager>();
-            _rasterizer = new Rasterizer();
+            var gameManager = GetComponentInParent<GameManager>();
+            _placeableGroundClickHandler = new PlaceableGroundClickHandler(gameManager);
+            _inputHandler = new InputHandler(
+                _placeableGroundClickHandler,
+                new TowerClickHandler());
         }
 
         protected virtual void Update()
         {
             if (Input.GetButtonDown(SelectCannonTypeAxis))
             {
-                _buildTowerId = TowerId.Cannon;
+                SetBuildTowerId(TowerId.Cannon);
             }
             if (Input.GetButtonDown(SelectGattlingTypeAxis))
             {
-                _buildTowerId = TowerId.Gattling;
+                SetBuildTowerId(TowerId.Gattling);
             }
             if (Input.GetButtonDown(SelectRailgunTypeAxis))
             {
-                _buildTowerId = TowerId.Railgun;
+                SetBuildTowerId(TowerId.Railgun);
             }
             if (Input.GetButtonDown(SelectMissileTypeAxis))
             {
-                _buildTowerId = TowerId.Missile;
+                SetBuildTowerId(TowerId.Missile);
             }
             if (Input.GetButtonDown(SelectMRLSTypeAxis))
             {
-                _buildTowerId = TowerId.MRLS;
+                SetBuildTowerId(TowerId.MRLS);
             }
 
             if (Input.GetButtonDown(PrimaryMouseButtonAxis))
             {
                 var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, float.PositiveInfinity, LayerMask.value))
+                if (Physics.Raycast(ray, out hit, float.PositiveInfinity))
                 {
-                    var placeableGround = hit.transform.gameObject.GetComponent<PlaceableGround>();
-                    var rasterizedPosition = _rasterizer.Rasterize(hit.point);
-                    if (placeableGround != null && _gameManager.CanSpawnTower(rasterizedPosition))
-                    {
-                        _gameManager.SpawnTower(_buildTowerId, rasterizedPosition);
-                    }
+                    _inputHandler.HandleRaycastHit(hit);
                 }
             }
+        }
+
+        private void SetBuildTowerId(TowerId id)
+        {
+            _placeableGroundClickHandler.TowerId = id;
         }
     }
 }
