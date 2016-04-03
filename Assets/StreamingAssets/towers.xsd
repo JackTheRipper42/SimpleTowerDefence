@@ -46,9 +46,7 @@
     <xs:complexContent>
       <xs:extension base="TowerInfoType">
         <xs:sequence>
-          <xs:element name="Level1" type="DirectFireTowerLevelType" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="Level2" type="DirectFireTowerLevelType" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="Level3" type="DirectFireTowerLevelType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Level" type="DirectFireTowerLevelType" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -57,9 +55,7 @@
     <xs:complexContent>
       <xs:extension base="TowerInfoType">
         <xs:sequence>
-          <xs:element name="Level1" type="AreaOfEffectTowerLevelType" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="Level2" type="AreaOfEffectTowerLevelType" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="Level3" type="AreaOfEffectTowerLevelType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Level" type="AreaOfEffectTowerLevelType" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

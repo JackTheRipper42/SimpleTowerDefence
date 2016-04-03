@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Assets.Scripts.Xml
 {
     [Serializable]
     public class DirectFireTowerInfo : TowerInfo
     {
-        public DirectFireTowerLevelInfo Level1 { get; set; }
-
-        public DirectFireTowerLevelInfo Level2 { get; set; }
-
-        public DirectFireTowerLevelInfo Level3 { get; set; }
+        [XmlElement("Level", Form = XmlSchemaForm.Unqualified)]
+        public DirectFireTowerLevelInfo[] Levels { get; set; }
     }
 }

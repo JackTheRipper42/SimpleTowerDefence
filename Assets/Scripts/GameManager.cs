@@ -246,12 +246,7 @@ namespace Assets.Scripts
                 return new DirectFireTowerModel(
                     directFireTowerInfo.Id,
                     sprites[directFireTowerInfo.BaseSprite],
-                    new[]
-                    {
-                        ParseTowerLevel(directFireTowerInfo.Level1, sprites),
-                        ParseTowerLevel(directFireTowerInfo.Level2, sprites),
-                        ParseTowerLevel(directFireTowerInfo.Level3, sprites),
-                    });
+                    directFireTowerInfo.Levels.Select(level => ParseTowerLevel(level, sprites)).ToArray());
             }
             if (infoType == typeof(AreaOfEffectTowerInfo))
             {
@@ -259,12 +254,7 @@ namespace Assets.Scripts
                 return new AreaOfEffectTowerModel(
                     areaOfEffectTowerInfo.Id,
                     sprites[areaOfEffectTowerInfo.BaseSprite],
-                    new[]
-                    {
-                        ParseTowerLevel(areaOfEffectTowerInfo.Level1, sprites),
-                        ParseTowerLevel(areaOfEffectTowerInfo.Level2, sprites),
-                        ParseTowerLevel(areaOfEffectTowerInfo.Level3, sprites)
-                    });
+                    areaOfEffectTowerInfo.Levels.Select(level => ParseTowerLevel(level, sprites)).ToArray());
             }
             throw new NotSupportedException(string.Format(
                 "The tower type '{0}' is not supported.",
