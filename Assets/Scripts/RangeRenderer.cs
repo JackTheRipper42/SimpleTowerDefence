@@ -41,6 +41,7 @@ namespace Assets.Scripts
             _lineRenderer.SetVertexCount(points.Length);
             _lineRenderer.SetPositions(points);
             _lineRenderer.SetWidth(Width, Width);
+            _lineRenderer.enabled = false;
         }
 
         private static Vector3 CalculatePoint(float radius, float angle)
