@@ -1,8 +1,7 @@
 ﻿using Assets.Scripts.Binding;
-using Assets.Scripts.UI.Bindings;
 using UnityEngine;
 
-namespace Assets.Scripts.UI
+namespace Assets.Scripts
 {
     [RequireComponent(typeof(Enemy))]
     public class EnemyView : MonoBehaviour

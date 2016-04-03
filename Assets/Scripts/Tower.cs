@@ -1,18 +1,15 @@
-﻿using System.Collections.Generic;
-using Assets.Scripts.Xml;
+﻿using Assets.Scripts.Xml;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-    [RequireComponent(typeof(SphereCollider))]
-    [RequireComponent(typeof(Rigidbody))]
     public abstract class Tower<TInfo> : MonoBehaviour
         where TInfo: TowerInfo
     {
         public Transform BaseTransform;
         public Transform TowerTransform;
 
-        private List<Enemy> _availableTargets;
         private Enemy _target;
         private float _lastShot;
         private GameManager _gameManager;
@@ -33,9 +30,6 @@ namespace Assets.Scripts
             Range = towerInfo.Range;
             FireRate = towerInfo.FireRate;
 
-            var sphereCollider = GetComponent<SphereCollider>();
-            sphereCollider.radius = Range;
-
             var baseSpriteRenderer = BaseTransform.GetComponent<SpriteRenderer>();
             baseSpriteRenderer.sprite = baseSprite;
 
@@ -50,7 +44,6 @@ namespace Assets.Scripts
 
         protected virtual void Start()
         {
-            _availableTargets = new List<Enemy>();
             _target = null;
             _lastShot = 0;
             _gameManager = GetComponentInParent<GameManager>();
@@ -65,9 +58,9 @@ namespace Assets.Scripts
                 return;
             }
 
-            _availableTargets.RemoveAll(target => target == null || !target.Alive);
+            var availableTargets = _gameManager.GetEnemies().Where(IsInRange).ToList();
 
-            if (_target != null && !_target.Alive)
+            if (_target != null && (!_target.Alive || !IsInRange(_target)))
             {
                 _target = null;
             }
@@ -87,7 +80,7 @@ namespace Assets.Scripts
             else
             {
                 var minDistance = float.MaxValue;
-                foreach (var availableTarget in _availableTargets)
+                foreach (var availableTarget in availableTargets)
                 {
                     var distance = (availableTarget.transform.position - transform.position).sqrMagnitude;
                     if (distance < minDistance)
@@ -99,27 +92,33 @@ namespace Assets.Scripts
             }
         }
 
-        protected virtual void OnTriggerEnter(Collider other)
+        private bool IsInRange(Enemy enemy)
         {
-            var enemy = other.GetComponentInParent<Enemy>();
-            if (enemy != null)
-            {
-                _availableTargets.Add(enemy);
-            }
+            var distance = (enemy.Position - transform.position).magnitude;
+            return distance <= Range;
         }
 
-        protected virtual void OnTriggerExit(Collider other)
-        {
-            var enemy = other.GetComponentInParent<Enemy>();
-            if (enemy != null)
-            {
-                _availableTargets.Remove(enemy);
-                if (ReferenceEquals(enemy, _target))
-                {
-                    _target = null;
-                }
-            }
-        }
+        //protected virtual void OnTriggerEnter(Collider other)
+        //{
+        //    var enemy = other.GetComponentInParent<Enemy>();
+        //    if (enemy != null)
+        //    {
+        //        _availableTargets.Add(enemy);
+        //    }
+        //}
+
+        //protected virtual void OnTriggerExit(Collider other)
+        //{
+        //    var enemy = other.GetComponentInParent<Enemy>();
+        //    if (enemy != null)
+        //    {
+        //        _availableTargets.Remove(enemy);
+        //        if (ReferenceEquals(enemy, _target))
+        //        {
+        //            _target = null;
+        //        }
+        //    }
+        //}
 
         private enum State
         {

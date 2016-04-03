@@ -2,13 +2,13 @@
 using Assets.Scripts.Binding;
 using UnityEngine;
 
-namespace Assets.Scripts.UI
+namespace Assets.Scripts
 {
     public class EnemyViewModel
     {
-        public readonly NotifyingObject<string> TextProperty = new NotifyingObject<string>(string.Empty);
-        public readonly NotifyingObject<Vector3> PositionProperty = new NotifyingObject<Vector3>();
-        public readonly NotifyingObject<Vector2> SizeProperty = new NotifyingObject<Vector2>();
+        public readonly NotifyingObject<string> TextProperty;
+        public readonly NotifyingObject<Vector3> PositionProperty;
+        public readonly NotifyingObject<Vector2> SizeProperty;
 
         private readonly StringFormatter _stringFormatter;
 
@@ -16,6 +16,10 @@ namespace Assets.Scripts.UI
 
         public EnemyViewModel()
         {
+            TextProperty = new NotifyingObject<string>(string.Empty);
+            PositionProperty = new NotifyingObject<Vector3>();
+            SizeProperty = new NotifyingObject<Vector2>();
+
             SizeProperty.PropertyChanged += SizePropertyOnPropertyChanged;
             _stringFormatter = new StringFormatter(CultureInfo.CurrentCulture);
         }

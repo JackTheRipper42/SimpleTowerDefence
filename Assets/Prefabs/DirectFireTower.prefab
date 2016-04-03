@@ -44,6 +44,7 @@ GameObject:
   - 54: {fileID: 5413544}
   - 135: {fileID: 13529800}
   - 114: {fileID: 11489124}
+  - 114: {fileID: 11452656}
   m_Layer: 0
   m_Name: DirectFireTower
   m_TagString: Untagged
@@ -147,6 +148,17 @@ MonoBehaviour:
   Color: {r: 0.8455882, g: 0, b: 0.15745428, a: 1}
   Points: 50
   Width: 0.05
+--- !u!114 &11452656
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 166550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690cc3b36469d9f4e92ae1214c7fc907, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11489124
 MonoBehaviour:
   m_ObjectHideFlags: 1

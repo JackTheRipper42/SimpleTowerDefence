@@ -31,8 +31,8 @@ namespace Assets.Scripts
         private IDictionary<string, RuntimeAnimatorController> _animatorControllers;
         private IDictionary<string, Sprite> _sprites; 
         private IDictionary<EnemyId, EnemyInfo> _enemyInfos;
-        private IDictionary<TowerId, TowerInfo> _towerInfos; 
-
+        private IDictionary<TowerId, TowerInfo> _towerInfos;
+        private HashSet<Enemy> _enemies; 
         private HashSet<Vector3> _towerPositions;
         private Level _level;
         
@@ -129,8 +129,14 @@ namespace Assets.Scripts
             _level = null;
         }
 
+        public IEnumerable<Enemy> GetEnemies()
+        {
+            return _enemies;
+        }
+
         protected virtual void Start()
         {
+            _enemies = new HashSet<Enemy>();
             _towerPositions = new HashSet<Vector3>();
             _animatorControllers = AnimatorControllers.ToDictionary(
                 controller => controller.name,
@@ -138,14 +144,14 @@ namespace Assets.Scripts
             _sprites = Sprites.ToDictionary(
                 sprite => sprite.name,
                 sprite => sprite);
-            _enemyInfos = GetEnemies().ToDictionary(
+            _enemyInfos = ParseEnemies().ToDictionary(
                 enemy => enemy.Id,
                 enemy => enemy);
-            _towerInfos = GetTowers().ToDictionary(
+            _towerInfos = ParseTowers().ToDictionary(
                 tower => tower.Id,
                 tower => tower);
 
-            var levels = GetLevels();
+            var levels = ParseLevels();
             LoadLevel(levels.First());
         }
 
@@ -186,14 +192,16 @@ namespace Assets.Scripts
                 animationController,
                 path,
                 offset);
+            _enemies.Add(enemy);
         }
 
         private void DestroyEnemy(Enemy enemy)
         {
+            _enemies.Remove(enemy);
             Destroy(enemy.gameObject);
         }
 
-        private static IEnumerable<Level> GetLevels()
+        private static IEnumerable<Level> ParseLevels()
         {
             var rootPath = System.IO.Path.Combine(Application.streamingAssetsPath, "Levels");
             var folders = Directory.GetDirectories(rootPath);
@@ -218,7 +226,7 @@ namespace Assets.Scripts
             }
         }
 
-        private static IEnumerable<EnemyInfo> GetEnemies()
+        private static IEnumerable<EnemyInfo> ParseEnemies()
         {
             var xmlPath = System.IO.Path.Combine(Application.streamingAssetsPath, "enemies.xml");
             var xsdPath = System.IO.Path.Combine(Application.streamingAssetsPath, "enemies.xsd");
@@ -232,7 +240,7 @@ namespace Assets.Scripts
             }
         }
 
-        private static IEnumerable<TowerInfo> GetTowers()
+        private static IEnumerable<TowerInfo> ParseTowers()
         {
             var xmlPath = System.IO.Path.Combine(Application.streamingAssetsPath, "towers.xml");
             var xsdPath = System.IO.Path.Combine(Application.streamingAssetsPath, "towers.xsd");

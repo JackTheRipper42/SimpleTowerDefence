@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.UI.Bindings
+namespace Assets.Scripts
 {
     [RequireComponent(typeof(Text))]
     [RequireComponent(typeof(ContentSizeRefitter))]
