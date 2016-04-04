@@ -314,7 +314,7 @@ namespace Assets.Scripts
             {
                 var spawner = new Spawner(path.GetPath());
                 spawners.Add(spawner);
-                var spawnerName = string.Format("{0}{1}", path.name, LuaScriptConstants.SpawnerGlobalNameSuffix);
+                var spawnerName = CreateSpawnerName(path.name);
                 script.Globals.Set(spawnerName, UserData.Create(spawner));
             }
 
@@ -337,6 +337,25 @@ namespace Assets.Scripts
             {
                 StartCoroutine(SpawnCoroutine(spawner));
             }
+        }
+
+        private static string CreateSpawnerName(string pathName)
+        {
+            if (pathName.IndexOfAny(LuaScriptConstants.DigitCharacters) == 0)
+            {
+                throw new InvalidOperationException(string.Format(
+                    "The name '{0}' starts with a digit character.",
+                    pathName));
+            }
+            if (pathName.IndexOfAny(LuaScriptConstants.InvalidNameCharacters) != -1)
+            {
+                throw new InvalidOperationException(string.Format(
+                    "The name '{0}' contains invalid character.", 
+                    pathName));
+            }
+
+            var luaPathName = char.ToLowerInvariant(pathName[0]) + pathName.Substring(1);
+            return string.Format("{0}{1}", luaPathName, LuaScriptConstants.SpawnerGlobalNameSuffix);
         }
 
         private IEnumerator SpawnCoroutine(Spawner spawner)
