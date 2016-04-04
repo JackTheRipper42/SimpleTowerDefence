@@ -5,8 +5,8 @@
         public const string SetupWaveFunctionName = "setupWave";
         public const string SpawnerGlobalNameSuffix = "Spawner";
         public const string DebugGlobalName = "debug";
-        public static char[] InvalidNameCharacters;
-        public static char[] DigitCharacters;
+        public static readonly char[] InvalidNameCharacters;
+        public static readonly char[] DigitCharacters;
 
         static LuaScriptConstants()
         {
