@@ -306,10 +306,8 @@ namespace Assets.Scripts
 
             var script = new Script(CoreModules.Preset_HardSandbox);
 
+            script.Options.DebugPrint = Debug.Log;
             UserData.RegisterType<ISpawner>();
-            UserData.RegisterType<IDebugger>();
-
-            script.Globals.Set(LuaScriptConstants.DebugGlobalName, UserData.Create(new Debugger()));
 
             var spawners = new List<Spawner>();
             foreach (var path in paths)
