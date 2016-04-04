@@ -5,7 +5,7 @@ namespace Assets.Scripts.Xml
     [Serializable]
     public class EnemyInfo
     {
-        public EnemyId Id { get; set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 

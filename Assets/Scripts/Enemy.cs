@@ -49,7 +49,7 @@ namespace Assets.Scripts
             }
         }
 
-        public EnemyId Id { get; private set; }
+        public string Id { get; private set; }
 
         public float Speed { get; private set; }
 

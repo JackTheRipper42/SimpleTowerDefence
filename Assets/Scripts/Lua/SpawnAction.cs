@@ -2,12 +2,12 @@ namespace Assets.Scripts.Lua
 {
     public class SpawnAction : ISpawnerAction
     {
-        public SpawnAction(EnemyId id)
+        public SpawnAction(string id)
         {
             Id = id;
         }
 
-        public EnemyId Id { get; private set; }
+        public string Id { get; private set; }
 
         public override string ToString()
         {

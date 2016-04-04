@@ -29,7 +29,7 @@ namespace Assets.Scripts
 
         private IDictionary<string, Sprite> _sprites; 
         private IDictionary<string, RuntimeAnimatorController> _animatorControllers;
-        private IDictionary<EnemyId, EnemyInfo> _enemyInfos;
+        private IDictionary<string, EnemyInfo> _enemyInfos;
         private IDictionary<TowerId, TowerInfo> _towerInfos; 
         private HashSet<Enemy> _enemies;
         private HashSet<Vector3> _towerPositions;
@@ -157,7 +157,7 @@ namespace Assets.Scripts
             }
         }
 
-        private void SpawnEnemy(EnemyId id, IList<Vector3> path)
+        private void SpawnEnemy(string id, IList<Vector3> path)
         {
             var obj = Instantiate(EnemyPrefab);
             var enemy = obj.GetComponent<Enemy>();

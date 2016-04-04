@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MoonSharp.Interpreter;
 using UnityEngine;
 
 namespace Assets.Scripts.Lua
@@ -24,16 +25,6 @@ namespace Assets.Scripts.Lua
             get { return _path; }
         }
 
-        public void SpawnSmallWalker()
-        {
-            _actions.Add(new SpawnAction(EnemyId.SmallWalker));
-        }
-
-        public void SpawnBigWalker()
-        {
-            _actions.Add(new SpawnAction(EnemyId.BigWalker));
-        }
-
         public void Wait(double time)
         {
             _actions.Add(new WaitAction(time));
@@ -42,6 +33,12 @@ namespace Assets.Scripts.Lua
         public void Debug(string message)
         {
             _actions.Add(new DebugAction(message));
+        }
+
+        public void Spawn(Table table)
+        {
+            var id = table.Get("id").String;
+            _actions.Add(new SpawnAction(id));
         }
     }
 }
