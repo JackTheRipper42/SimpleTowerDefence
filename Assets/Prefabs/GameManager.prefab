@@ -200,11 +200,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PrimaryMouseButtonAxis: Fire1
   SecondaryMouseButtonAxis: Fire2
-  SelectCannonTypeAxis: Select Cannon Type
-  SelectGattlingTypeAxis: Select Gattling Type
-  SelectRailgunTypeAxis: Select Railgun Type
-  SelectMissileTypeAxis: Select Missile Type
-  SelectMRLSTypeAxis: Select MRLS Type
+  TowerType1Axis: Select Tower Type 1
+  TowerType2Axis: Select Tower Type 2
+  TowerType3Axis: Select Tower Type 3
+  TowerType4Axis: Select Tower Type 4
+  TowerType5Axis: Select Tower Type 5
 --- !u!114 &11487094
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -249,6 +249,7 @@ MonoBehaviour:
   AreaOfEffectTowerPrefab: {fileID: 170732, guid: 034e768bd42fef849acd586191446636,
     type: 2}
   MaxSpawnOffset: 0.678
+  Cash: 0
 --- !u!114 &11495570
 MonoBehaviour:
   m_ObjectHideFlags: 1

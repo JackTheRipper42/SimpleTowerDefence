@@ -1,3 +1,7 @@
+function getCash(wave)
+	return 5000;
+end
+
 function setupWave(wave)
 	setupPath1(wave)
 end

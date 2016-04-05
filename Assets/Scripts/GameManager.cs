@@ -26,7 +26,7 @@ namespace Assets.Scripts
         public GameObject DirectFireTowerPrefab;
         public GameObject AreaOfEffectTowerPrefab;
         [Range(0f, 2f)] public float MaxSpawnOffset = 1f;
-        public int Cash = 5000;
+        public int Cash;
 
         private IDictionary<string, Sprite> _sprites; 
         private IDictionary<string, RuntimeAnimatorController> _animatorControllers;
@@ -355,6 +355,17 @@ namespace Assets.Scripts
             var scriptCode = File.ReadAllText(scriptPath.FullName);
             script.DoString(scriptCode);
 
+            var getCashFunction = script.Globals.Get(LuaScriptConstants.GetCashFunctionName);
+            if (getCashFunction.IsNil())
+            {
+                throw new InvalidOperationException(string.Format(
+                    "The '{0}' function does not exist in script '{1}'.",
+                    LuaScriptConstants.GetCashFunctionName,
+                    scriptPath.Name));
+            }
+            var cashResult = script.Call(script.Globals[LuaScriptConstants.GetCashFunctionName], 0);
+            Cash += (int) cashResult.Number;
+
             var setupSpawnFunction = script.Globals.Get(LuaScriptConstants.SetupWaveFunctionName);
             if (setupSpawnFunction.IsNil())
             {
@@ -363,7 +374,6 @@ namespace Assets.Scripts
                     LuaScriptConstants.SetupWaveFunctionName,
                     scriptPath.Name));
             }
-
             script.Call(script.Globals[LuaScriptConstants.SetupWaveFunctionName], 0);
 
             foreach (var spawner in spawners)

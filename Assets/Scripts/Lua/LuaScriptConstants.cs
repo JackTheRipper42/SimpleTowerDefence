@@ -3,6 +3,7 @@
     public static class LuaScriptConstants
     {
         public const string SetupWaveFunctionName = "setupWave";
+        public const string GetCashFunctionName = "getCash";
         public const string SpawnerGlobalNameSuffix = "Spawner";
         public const string DebugGlobalName = "debug";
         public static readonly char[] InvalidNameCharacters;
