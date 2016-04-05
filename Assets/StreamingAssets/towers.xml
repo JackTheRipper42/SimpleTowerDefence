@@ -5,18 +5,21 @@
     <Name>Cannon</Name>
     <BaseSprite>turret-base</BaseSprite>
     <Level>
+      <Price>50</Price>
       <Range>5</Range>
       <FireRate>2</FireRate>
       <TowerSprite>turret-1-1</TowerSprite>
       <Damage>0.3</Damage>
     </Level>
     <Level>
+      <Price>60</Price>
       <Range>6</Range>
       <FireRate>2</FireRate>
       <TowerSprite>turret-1-2</TowerSprite>
       <Damage>0.3</Damage>
     </Level>
     <Level>
+      <Price>75</Price>
       <Range>8</Range>
       <FireRate>2</FireRate>
       <TowerSprite>turret-1-3</TowerSprite>
@@ -28,18 +31,21 @@
     <Name>Gattling</Name>
     <BaseSprite>turret-base</BaseSprite>
     <Level>
+      <Price>35</Price>
       <Range>3</Range>
       <FireRate>5</FireRate>
       <TowerSprite>turret-5-1</TowerSprite>
       <Damage>0.1</Damage>
     </Level>
     <Level>
+      <Price>50</Price>
       <Range>3</Range>
       <FireRate>5</FireRate>
       <TowerSprite>turret-5-2</TowerSprite>
       <Damage>0.1</Damage>
     </Level>
     <Level>
+      <Price>70</Price>
       <Range>3</Range>
       <FireRate>5</FireRate>
       <TowerSprite>turret-5-3</TowerSprite>
@@ -51,18 +57,21 @@
     <Name>Railgun</Name>
     <BaseSprite>turret-base</BaseSprite>
     <Level>
+      <Price>100</Price>
       <Range>10</Range>
       <FireRate>0.5</FireRate>
       <TowerSprite>turret-7-1</TowerSprite>
       <Damage>3</Damage>
     </Level>
     <Level>
+      <Price>125</Price>
       <Range>10</Range>
       <FireRate>0.5</FireRate>
       <TowerSprite>turret-7-2</TowerSprite>
       <Damage>3</Damage>
     </Level>
     <Level>
+      <Price>150</Price>
       <Range>10</Range>
       <FireRate>0.5</FireRate>
       <TowerSprite>turret-7-3</TowerSprite>
@@ -74,6 +83,7 @@
     <Name>Missile</Name>
     <BaseSprite>turret-base</BaseSprite>
     <Level>
+      <Price>200</Price>
       <Range>5</Range>
       <FireRate>0.5</FireRate>
       <TowerSprite>turret-3-1</TowerSprite>
@@ -81,6 +91,7 @@
       <DamageRange>0.75</DamageRange>
     </Level>
     <Level>
+      <Price>250</Price>
       <Range>5</Range>
       <FireRate>0.5</FireRate>
       <TowerSprite>turret-3-2</TowerSprite>
@@ -88,6 +99,7 @@
       <DamageRange>0.75</DamageRange>
     </Level>
     <Level>
+      <Price>350</Price>
       <Range>5</Range>
       <FireRate>0.5</FireRate>
       <TowerSprite>turret-3-3</TowerSprite>
@@ -100,6 +112,7 @@
     <Name>MRLS</Name>
     <BaseSprite>turret-base</BaseSprite>
     <Level>
+      <Price>200</Price>
       <Range>5</Range>
       <FireRate>2</FireRate>
       <TowerSprite>turret-4-1</TowerSprite>
@@ -107,6 +120,7 @@
       <DamageRange>10</DamageRange>
     </Level>
     <Level>
+      <Price>250</Price>
       <Range>5</Range>
       <FireRate>2</FireRate>
       <TowerSprite>turret-4-2</TowerSprite>
@@ -114,6 +128,7 @@
       <DamageRange>10</DamageRange>
     </Level>
     <Level>
+      <Price>350</Price>
       <Range>5</Range>
       <FireRate>2</FireRate>
       <TowerSprite>turret-4-3</TowerSprite>

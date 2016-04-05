@@ -8,12 +8,13 @@ namespace Assets.Scripts
         private readonly float _damageRange;
 
         public AreaOfEffectTowerLevel(
+            int price,
             float range,
             float fireRate,
             float areaDamage,
             float damageRange,
             Sprite towerSprite)
-            : base(range, fireRate, towerSprite)
+            : base(price, range, fireRate, towerSprite)
         {
             _areaDamage = areaDamage;
             _damageRange = damageRange;

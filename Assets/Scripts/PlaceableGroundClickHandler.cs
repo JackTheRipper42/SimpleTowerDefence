@@ -18,7 +18,7 @@ namespace Assets.Scripts
         protected override void Handle(RaycastHit hit, PlaceableGround placeableGround)
         {
             var rasterizedPosition = _rasterizer.Rasterize(hit.point);
-            if (_gameManager.CanSpawnTower(rasterizedPosition))
+            if (_gameManager.CanSpawnTower(TowerId, rasterizedPosition))
             {
                 _gameManager.SpawnTower(TowerId, rasterizedPosition);
             }

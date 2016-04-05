@@ -24,7 +24,7 @@ namespace Assets.Scripts
             _placeableGroundClickHandler = new PlaceableGroundClickHandler(gameManager);
             _inputHandler = new InputHandler(
                 _placeableGroundClickHandler,
-                new TowerClickHandler());
+                new TowerClickHandler(gameManager));
             _placeableGroundClickHandler.TowerId = _towerIds[0];
         }
 

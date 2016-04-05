@@ -26,11 +26,13 @@ namespace Assets.Scripts
         public GameObject DirectFireTowerPrefab;
         public GameObject AreaOfEffectTowerPrefab;
         [Range(0f, 2f)] public float MaxSpawnOffset = 1f;
+        public int Cash = 5000;
 
         private IDictionary<string, Sprite> _sprites; 
         private IDictionary<string, RuntimeAnimatorController> _animatorControllers;
         private IDictionary<string, EnemyInfo> _enemyInfos;
-        private IDictionary<string, TowerInfo> _towerInfos; 
+        private IDictionary<string, ITowerInfo> _towerInfos;
+        private IDictionary<string, int[]> _towerPrices; 
         private HashSet<Enemy> _enemies;
         private HashSet<Vector3> _towerPositions;
         private Level _level;
@@ -82,12 +84,26 @@ namespace Assets.Scripts
             }
             obj.transform.parent = TowerContainer.transform;
             obj.transform.position = position;
+
+            Cash -= _towerPrices[id][0];
         }
 
-        public bool CanSpawnTower(Vector3 position)
+        public bool CanSpawnTower(string id, Vector3 position)
         {
-            return !_towerPositions.Contains(position);
+            return !_towerPositions.Contains(position) && Cash >= _towerPrices[id][0];
         }
+
+        public void UpgradeTower(ITower tower)
+        {
+            tower.Upgrade();
+            Cash -= _towerPrices[tower.Id][tower.Level];
+        }
+
+        public bool CanUpgrade(ITower tower)
+        {
+            return tower.CanUpgrade() && Cash >= _towerPrices[tower.Id][tower.Level + 1];
+        }
+
 
         public float GetTime()
         {
@@ -144,10 +160,16 @@ namespace Assets.Scripts
             _enemyInfos = ParseEnemies().ToDictionary(
                 enemy => enemy.Id,
                 enemy => enemy);
-            _towerInfos = ParseTowers().ToDictionary(
-                tower => tower.Id,
-                tower => tower);
-
+            _towerInfos = new Dictionary<string, ITowerInfo>();
+            _towerPrices = new Dictionary<string, int[]>();
+            foreach (var towerInfo in ParseTowers())
+            {
+                _towerInfos.Add(towerInfo.Id, towerInfo);
+                _towerPrices.Add(
+                    towerInfo.Id,
+                    towerInfo.Levels.Select(level => level.Price).ToArray());
+            }
+          
             var levels = ParseLevels();
             LoadLevel(levels.First());
         }
@@ -225,13 +247,13 @@ namespace Assets.Scripts
             }
         }
 
-        private static IEnumerable<TowerInfo> ParseTowers()
+        private static IEnumerable<ITowerInfo> ParseTowers()
         {
             var xmlPath = System.IO.Path.Combine(Application.streamingAssetsPath, "towers.xml");
             var xsdPath = System.IO.Path.Combine(Application.streamingAssetsPath, "towers.xsd");
             ValidateXmlDocument(xmlPath, xsdPath);
 
-            var allTowers = new List<TowerInfo>();
+            var allTowers = new List<ITowerInfo>();
             using (var stream = new FileStream(xmlPath, FileMode.Open, FileAccess.Read))
             {
                 var serializer = new XmlSerializer(typeof(Towers));
@@ -242,7 +264,7 @@ namespace Assets.Scripts
             return allTowers;
         }
 
-        private static ITowerModel ParserTowerInfo(TowerInfo info, IDictionary<string, Sprite> sprites)
+        private static ITowerModel ParserTowerInfo(ITowerInfo info, IDictionary<string, Sprite> sprites)
         {
             var infoType = info.GetType();
             if (infoType == typeof(DirectFireTowerInfo))
@@ -270,7 +292,12 @@ namespace Assets.Scripts
             DirectFireTowerLevelInfo info,
             IDictionary<string, Sprite> sprites)
         {
-            return new DirectFireTowerLevel(info.Range, info.FireRate, info.Damage, sprites[info.TowerSprite]);
+            return new DirectFireTowerLevel(
+                info.Price,
+                info.Range,
+                info.FireRate,
+                info.Damage,
+                sprites[info.TowerSprite]);
         }
 
         private static AreaOfEffectTowerLevel ParseTowerLevel(
@@ -278,6 +305,7 @@ namespace Assets.Scripts
             IDictionary<string, Sprite> sprites)
         {
             return new AreaOfEffectTowerLevel(
+                info.Price,
                 info.Range,
                 info.FireRate,
                 info.AreaDamage,
