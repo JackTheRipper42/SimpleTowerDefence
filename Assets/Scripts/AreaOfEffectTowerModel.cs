@@ -5,7 +5,7 @@ namespace Assets.Scripts
     public class AreaOfEffectTowerModel : TowerModel<AreaOfEffectTowerLevel>
     {
         public AreaOfEffectTowerModel(
-            TowerId id,
+            string id,
             Sprite baseSprite,
             AreaOfEffectTowerLevel[] levels
             )

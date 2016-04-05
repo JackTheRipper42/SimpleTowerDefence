@@ -2,6 +2,6 @@
 {
     public interface ITowerModel
     {
-        TowerId Id { get; }
+        string Id { get; }
     }
 }

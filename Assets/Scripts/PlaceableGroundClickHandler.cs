@@ -13,7 +13,7 @@ namespace Assets.Scripts
             _rasterizer = new Rasterizer();
         }
 
-        public TowerId TowerId { get; set; }
+        public string TowerId { get; set; }
 
         protected override void Handle(RaycastHit hit, PlaceableGround placeableGround)
         {

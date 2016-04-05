@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -6,45 +7,48 @@ namespace Assets.Scripts
     {
         public string PrimaryMouseButtonAxis = "Fire1";
         public string SecondaryMouseButtonAxis = "Fire2";
-        public string SelectCannonTypeAxis = "Select Cannon Type";
-        public string SelectGattlingTypeAxis = "Select Gattling Type";
-        public string SelectRailgunTypeAxis = "Select Railgun Type";
-        public string SelectMissileTypeAxis = "Select Missile Type";
-        public string SelectMRLSTypeAxis = "Select MRLS Type";
+        public string TowerType1Axis = "Select Tower Type 1";
+        public string TowerType2Axis = "Select Tower Type 2";
+        public string TowerType3Axis = "Select Tower Type 3";
+        public string TowerType4Axis = "Select Tower Type 4";
+        public string TowerType5Axis = "Select Tower Type 5";
 
         private InputHandler _inputHandler;
         private PlaceableGroundClickHandler _placeableGroundClickHandler;
+        private string[] _towerIds;
 
         protected virtual void Start()
         {
             var gameManager = GetComponentInParent<GameManager>();
+            _towerIds = gameManager.GetTowerIds().ToArray();
             _placeableGroundClickHandler = new PlaceableGroundClickHandler(gameManager);
             _inputHandler = new InputHandler(
                 _placeableGroundClickHandler,
                 new TowerClickHandler());
+            _placeableGroundClickHandler.TowerId = _towerIds[0];
         }
 
         protected virtual void Update()
         {
-            if (Input.GetButtonDown(SelectCannonTypeAxis))
+            if (Input.GetButtonDown(TowerType1Axis))
             {
-                SetBuildTowerId(TowerId.Cannon);
+                _placeableGroundClickHandler.TowerId = _towerIds[0];
             }
-            if (Input.GetButtonDown(SelectGattlingTypeAxis))
+            if (Input.GetButtonDown(TowerType2Axis))
             {
-                SetBuildTowerId(TowerId.Gattling);
+                _placeableGroundClickHandler.TowerId = _towerIds[1];
             }
-            if (Input.GetButtonDown(SelectRailgunTypeAxis))
+            if (Input.GetButtonDown(TowerType3Axis))
             {
-                SetBuildTowerId(TowerId.Railgun);
+                _placeableGroundClickHandler.TowerId = _towerIds[2];
             }
-            if (Input.GetButtonDown(SelectMissileTypeAxis))
+            if (Input.GetButtonDown(TowerType4Axis))
             {
-                SetBuildTowerId(TowerId.Missile);
+                _placeableGroundClickHandler.TowerId = _towerIds[3];
             }
-            if (Input.GetButtonDown(SelectMRLSTypeAxis))
+            if (Input.GetButtonDown(TowerType5Axis))
             {
-                SetBuildTowerId(TowerId.MRLS);
+                _placeableGroundClickHandler.TowerId = _towerIds[4];
             }
 
             if (Input.GetButtonDown(PrimaryMouseButtonAxis))
@@ -56,11 +60,6 @@ namespace Assets.Scripts
                     _inputHandler.HandleRaycastHit(hit);
                 }
             }
-        }
-
-        private void SetBuildTowerId(TowerId id)
-        {
-            _placeableGroundClickHandler.TowerId = id;
         }
     }
 }

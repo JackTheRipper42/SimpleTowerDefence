@@ -30,7 +30,7 @@ namespace Assets.Scripts
         private IDictionary<string, Sprite> _sprites; 
         private IDictionary<string, RuntimeAnimatorController> _animatorControllers;
         private IDictionary<string, EnemyInfo> _enemyInfos;
-        private IDictionary<TowerId, TowerInfo> _towerInfos; 
+        private IDictionary<string, TowerInfo> _towerInfos; 
         private HashSet<Enemy> _enemies;
         private HashSet<Vector3> _towerPositions;
         private Level _level;
@@ -55,7 +55,7 @@ namespace Assets.Scripts
             DestroyEnemy(enemy);
         }
 
-        public void SpawnTower(TowerId id, Vector3 position)
+        public void SpawnTower(string id, Vector3 position)
         {
             var info = _towerInfos[id];
             var model = ParserTowerInfo(info, _sprites);
@@ -123,6 +123,11 @@ namespace Assets.Scripts
         public IEnumerable<Enemy> GetEnemies()
         {
             return _enemies;
+        }
+
+        public IEnumerable<string> GetTowerIds()
+        {
+            return _towerInfos.Keys;
         }
 
         protected virtual void Start()
@@ -231,8 +236,8 @@ namespace Assets.Scripts
             {
                 var serializer = new XmlSerializer(typeof(Towers));
                 var towers = (Towers) serializer.Deserialize(stream);
-                allTowers.AddRange(towers.AreaOfEffectTower);
                 allTowers.AddRange(towers.DirectFireTower);
+                allTowers.AddRange(towers.AreaOfEffectTower);
             }
             return allTowers;
         }

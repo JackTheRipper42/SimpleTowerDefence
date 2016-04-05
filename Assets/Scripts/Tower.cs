@@ -20,7 +20,7 @@ namespace Assets.Scripts
             _state = State.Undefined;
         }
 
-        public TowerId Id
+        public string Id
         {
             get { return Model.Id; }
         }

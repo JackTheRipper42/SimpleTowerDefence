@@ -8,12 +8,12 @@ namespace Assets.Scripts
     {
         public readonly NotifyingObject<int> LevelProperty;
 
-        private readonly TowerId _id;
+        private readonly string _id;
         private readonly Sprite _baseSprite;
         private readonly TLevel[] _levels;
 
         protected TowerModel(
-            TowerId id,
+            string id,
             Sprite baseSprite,
             TLevel[] levels)
         {
@@ -23,7 +23,7 @@ namespace Assets.Scripts
             LevelProperty = new NotifyingObject<int>();
         }
 
-        public TowerId Id
+        public string Id
         {
             get { return _id; }
         }
