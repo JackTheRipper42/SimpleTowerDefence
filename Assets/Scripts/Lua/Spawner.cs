@@ -20,6 +20,8 @@ namespace Assets.Scripts.Lua
             get { return _actions; }
         }
 
+        public bool Finished { get; set; }
+
         public IList<Vector3> Path
         {
             get { return _path; }
@@ -39,6 +41,11 @@ namespace Assets.Scripts.Lua
         {
             var id = table.Get("id").String;
             _actions.Add(new SpawnAction(id));
+        }
+
+        public void Clear()
+        {
+            _actions.Clear();
         }
     }
 }

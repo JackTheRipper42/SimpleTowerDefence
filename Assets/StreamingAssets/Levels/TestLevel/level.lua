@@ -10,7 +10,6 @@ function setupPath1(wave)
 	assert(path1Spawner~=nil, "'path1Spawner' does not exist.");
 
 	print(string.format("wave %i", wave));
-	path1Spawner.Wait(4);
 	for i=1,10 do 
 		for i=1,5 do
 			path1Spawner.Spawn({id = 'SmallWalker'});

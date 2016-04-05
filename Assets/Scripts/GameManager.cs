@@ -227,7 +227,7 @@ namespace Assets.Scripts
                         var levelInfo = (LevelInfo) serializer.Deserialize(stream);
                         var sceneName = string.Format("Scenes/Maps/{0}", levelInfo.Map);
 
-                        yield return new Level(levelInfo.Name, sceneName, levelLua.FullName);
+                        yield return new Level(levelInfo.Name, sceneName, levelLua.FullName, levelInfo.Waves);
                     }
                 }
             }
@@ -363,9 +363,6 @@ namespace Assets.Scripts
                     LuaScriptConstants.GetCashFunctionName,
                     scriptPath.Name));
             }
-            var cashResult = script.Call(script.Globals[LuaScriptConstants.GetCashFunctionName], 0);
-            Cash += (int) cashResult.Number;
-
             var setupSpawnFunction = script.Globals.Get(LuaScriptConstants.SetupWaveFunctionName);
             if (setupSpawnFunction.IsNil())
             {
@@ -374,12 +371,37 @@ namespace Assets.Scripts
                     LuaScriptConstants.SetupWaveFunctionName,
                     scriptPath.Name));
             }
-            script.Call(script.Globals[LuaScriptConstants.SetupWaveFunctionName], 0);
 
-            foreach (var spawner in spawners)
+            for (var wave = 0; wave < level.Waves; wave++)
             {
-                StartCoroutine(SpawnCoroutine(spawner));
+                foreach (var spawner in spawners)
+                {
+                    spawner.Clear();
+                }
+
+                var cashResult = script.Call(script.Globals[LuaScriptConstants.GetCashFunctionName], wave);
+                Cash += (int) cashResult.Number;
+                script.Call(script.Globals[LuaScriptConstants.SetupWaveFunctionName], wave);
+
+                yield return new WaitForSeconds(5);
+                foreach (var spawner in spawners)
+                {
+                    StartCoroutine(SpawnCoroutine(spawner));
+                }
+
+                while (spawners.Any(spawner => !spawner.Finished) || _enemies.Count > 0)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+
+                Debug.Log("wave finished");
             }
+
+            Debug.Log("level finished");
+
+            yield return new WaitForSeconds(4);
+
+            UnloadLevel();
         }
 
         private static string CreateSpawnerName(string pathName)
@@ -403,6 +425,7 @@ namespace Assets.Scripts
 
         private IEnumerator SpawnCoroutine(Spawner spawner)
         {
+            spawner.Finished = false;
             foreach (var action in spawner.Actions)
             {
                 var waitAction = action as WaitAction;
@@ -423,6 +446,7 @@ namespace Assets.Scripts
                     Debug.Log(debugAction.Message);
                 }
             }
+            spawner.Finished = true;
         }
     }
 }

@@ -8,8 +8,13 @@ namespace Assets.Scripts
         private readonly string _name;
         private readonly string _sceneName;
         private readonly string _scriptPath;
+        private readonly int _waves;
 
-        public Level([NotNull] string name, [NotNull] string sceneName, [NotNull] string scriptPath)
+        public Level(
+            [NotNull] string name, 
+            [NotNull] string sceneName, 
+            [NotNull] string scriptPath,
+            int waves)
         {
             if (name == null)
             {
@@ -27,6 +32,7 @@ namespace Assets.Scripts
             _name = name;
             _sceneName = sceneName;
             _scriptPath = scriptPath;
+            _waves = waves;
         }
 
         public string Name
@@ -42,6 +48,11 @@ namespace Assets.Scripts
         public string ScriptPath
         {
             get { return _scriptPath; }
+        }
+
+        public int Waves
+        {
+            get { return _waves; }
         }
     }
 }
