@@ -1,7 +1,9 @@
-﻿using Assets.Scripts.Binding;
+﻿using System;
+using Assets.Scripts.Binding;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Xml;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -56,14 +58,19 @@ namespace Assets.Scripts
         public float MaxHealth { get; private set; }
 
         public void Initialize(
-            EnemyInfo enemyInfo,
-            RuntimeAnimatorController animatorController,
-            IEnumerable<Vector3> path, 
+            [NotNull] EnemyInfo enemyInfo,
+            [NotNull] Buff buff,
+            [NotNull] RuntimeAnimatorController animatorController,
+            [NotNull] IEnumerable<Vector3> path,
             Vector3 offset)
         {
+            if (enemyInfo == null) throw new ArgumentNullException("enemyInfo");
+            if (buff == null) throw new ArgumentNullException("buff");
+            if (animatorController == null) throw new ArgumentNullException("animatorController");
+            if (path == null) throw new ArgumentNullException("path");
             Id = enemyInfo.Id;
             Speed = enemyInfo.Speed;
-            MaxHealth = enemyInfo.Health;
+            MaxHealth = enemyInfo.Health*buff.HealthBoost;
             RendererTransform.localScale = new Vector3(enemyInfo.Size, enemyInfo.Size, enemyInfo.Size);
             var animator = RendererTransform.GetComponent<Animator>();
             animator.runtimeAnimatorController = animatorController;

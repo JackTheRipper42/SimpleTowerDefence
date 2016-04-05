@@ -184,7 +184,7 @@ namespace Assets.Scripts
             }
         }
 
-        private void SpawnEnemy(string id, IList<Vector3> path)
+        private void SpawnEnemy(string id, Buff buff, IList<Vector3> path)
         {
             var obj = Instantiate(EnemyPrefab);
             var enemy = obj.GetComponent<Enemy>();
@@ -196,6 +196,7 @@ namespace Assets.Scripts
             var animationController = _animatorControllers[enemyInfo.AnimationController];
             enemy.Initialize(
                 enemyInfo,
+                buff,
                 animationController,
                 path,
                 offset);
@@ -437,7 +438,7 @@ namespace Assets.Scripts
                 var spawnAction = action as SpawnAction;
                 if (spawnAction != null)
                 {
-                    SpawnEnemy(spawnAction.Id, spawner.Path);
+                    SpawnEnemy(spawnAction.Id, spawnAction.Buff, spawner.Path);
                 }
 
                 var debugAction = action as DebugAction;

@@ -6,6 +6,8 @@
         public const string GetCashFunctionName = "getCash";
         public const string SpawnerGlobalNameSuffix = "Spawner";
         public const string DebugGlobalName = "debug";
+        public const string IdKey = "id";
+        public const string HealthBoostKey = "healthBoost";
         public static readonly char[] InvalidNameCharacters;
         public static readonly char[] DigitCharacters;
 

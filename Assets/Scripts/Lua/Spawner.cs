@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using MoonSharp.Interpreter;
+﻿using MoonSharp.Interpreter;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Lua
@@ -39,8 +39,10 @@ namespace Assets.Scripts.Lua
 
         public void Spawn(Table table)
         {
-            var id = table.Get("id").String;
-            _actions.Add(new SpawnAction(id));
+            var id = table.Get(LuaScriptConstants.IdKey).String;
+            var healthBoostDynValue = table.Get(LuaScriptConstants.HealthBoostKey);
+            var healthBoost = healthBoostDynValue.IsNil() ? 1f : (float) healthBoostDynValue.Number;
+            _actions.Add(new SpawnAction(id, new Buff(healthBoost)));
         }
 
         public void Clear()

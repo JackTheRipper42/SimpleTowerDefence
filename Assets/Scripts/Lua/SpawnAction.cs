@@ -1,17 +1,36 @@
+using System;
+using JetBrains.Annotations;
+
 namespace Assets.Scripts.Lua
 {
     public class SpawnAction : ISpawnerAction
     {
-        public SpawnAction(string id)
+        private readonly string _id;
+        private readonly Buff _buff;
+
+        public SpawnAction([NotNull] string id, [NotNull] Buff buff)
         {
-            Id = id;
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+            if (buff == null)
+            {
+                throw new ArgumentNullException("buff");
+            }
+
+            _id = id;
+            _buff = buff;
         }
 
-        public string Id { get; private set; }
-
-        public override string ToString()
+        public string Id
         {
-            return string.Format("spawn {0}", Id);
+            get { return _id; }
+        }
+
+        public Buff Buff
+        {
+            get { return _buff; }
         }
     }
 }
